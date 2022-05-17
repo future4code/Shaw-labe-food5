@@ -35,8 +35,12 @@ align-items: center;
 
 margin-top: 28px; 
 
-p{
+#signUpButton{
     margin-top: 28px; 
+}
+
+p{
+    font-family: 'Roboto', sans-serif;
 }
 
 `
@@ -44,6 +48,7 @@ p{
 export const LoginPageFormDiv = styled.div`
 display: flex; 
 flex-direction: column; 
+font-family: 'Roboto', sans-serif; 
 width: 90%; 
 
 #passwordInput{
@@ -62,6 +67,12 @@ Button{
 
     .MuiButtonBase-root {
     color: #000000;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+.MuiOutlinedInput-root{
+    font-family: 'Roboto', sans-serif; 
 }
 
 `
@@ -70,15 +81,17 @@ Button{
 export const GreyBorderTextField = styled(TextField)`
   & label.Mui-focused {
     color:  #b8b8b8 ;
-    border: 1px;
+    font-family: 'Roboto', sans-serif;
+   
   }
   & .MuiOutlinedInput-root {
     &.Mui-focused fieldset {
       border-color: #b8b8b8 ;
+      font-family: 'Roboto', sans-serif;
     }
   }
-
-  & .MuiIconButton-root{
-      color: 'black'
+  .MuiInputLabel-root{
+    font-family: 'Roboto', sans-serif;
   }
+ 
 `;
