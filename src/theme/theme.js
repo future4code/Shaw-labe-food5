@@ -11,6 +11,7 @@ const theme = createTheme({
 
         secondary: {
             main: secondaryColor,
+            contrastText: '#000000'
         },
     },
     components:{
@@ -19,14 +20,14 @@ const theme = createTheme({
             {
               props: { variant: 'primary' },
               style: {
-                background: '#5cb646',
+                background: primaryColor,
                 padding: '12px'
               },
             },
             {
                 props: { variant: 'secondary' },
                 style: {
-                  background: primaryColor,
+                  background: secondaryColor,
                   padding: '12px',
                   color:'black'
                 },
