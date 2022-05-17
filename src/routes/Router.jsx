@@ -8,6 +8,7 @@ import ProfilePage from '../pages/profile/Profile'
 import RestaurantPage from '../pages/restaurant/Restaurant'
 import SearchPage from '../pages/search/SearchPage'
 import SignUpPage from '../pages/signup/SignUpPage'
+import AddressPage from '../pages/address/AddressPage'
 
 
 const Router = () => {
@@ -22,6 +23,7 @@ const Router = () => {
                 <Route path='/search' element={<SearchPage />} />
                 <Route path='/cart' element={<CartPage />} />
                 <Route path='/restaurant/:id' element={<RestaurantPage />} />
+                <Route path='/address' element={<AddressPage/>} />
                 <Route path='*' element={<ErrorPage />} />
             </Routes>
         </BrowserRouter>
