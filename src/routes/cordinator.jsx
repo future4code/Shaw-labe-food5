@@ -25,6 +25,9 @@ export const goToSearch = (navigate) => {
 export const goToSignUp = (navigate) => {
     navigate('/signup')
 }
+export const goToLastPage = (navigate) => {
+    navigate(-1); 
+}
 
 
 

@@ -43,6 +43,10 @@ p{
     font-family: 'Roboto', sans-serif;
 }
 
+h3{
+  font-size: 16px; 
+  margin-bottom: 20px; 
+}
 `
 
 export const LoginPageFormDiv = styled.div`
