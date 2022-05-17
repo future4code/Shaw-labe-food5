@@ -16,15 +16,16 @@ const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false); 
 
     useEffect( ()=>{
-        if(window.localStorage.getItem('token'))
-        {
-            goToHome(navigate); 
+        const token = window.sessionStorage.getItem('token')
+        
+        if(token) {
+            navigate('/', {replace: true})
         }
+
 
     },[])
 
-
-    
+   
 
     return (
         <LoginPageMainDiv>
@@ -34,7 +35,7 @@ const LoginPage = () => {
             </LoginPageLogoDiv>
 
             <LoginPageContentDiv>
-                <p>Entrar</p>
+                <h3>Entrar</h3>
 
 
                 <LoginPageFormDiv>
@@ -55,7 +56,7 @@ const LoginPage = () => {
                 })}
 
                 onSubmit = { (values, actions) => {
-                    //codigo de submeter importante
+                    //codigo de submeter 
                     let body = {
                         email: values.email, 
                         password: values.password
