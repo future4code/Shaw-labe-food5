@@ -95,6 +95,7 @@ const LoginPage = () => {
                                        sx={{
                                            marginTop: '16px',
                                            colorScheme: '#b8b8b8 ',
+                                           fontFamily: "'Roboto', sans-serif",
                                           
                                        }}
                                        label = "Senha*"
@@ -150,7 +151,7 @@ const LoginPage = () => {
             
 
 
-            <p onClick={()=> goToSignUp(navigate)}>Não possui cadastro? Clique aqui.</p>
+            <p id='signUpButton' onClick={()=> goToSignUp(navigate)}>Não possui cadastro? Clique aqui.</p>
             </LoginPageContentDiv>
            
         </LoginPageMainDiv>
