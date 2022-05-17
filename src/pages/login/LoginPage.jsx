@@ -61,7 +61,10 @@ const LoginPage = () => {
                         password: values.password
                     }
 
-                    alert(body); 
+                    console.log(body); 
+
+                    actions.setSubmitting(false)
+                    actions.resetForm()
                 }}
 
                 >
@@ -127,7 +130,7 @@ const LoginPage = () => {
                                variant='contained'
                                 fullWidth
                                 disableElevation
-                                
+                                type='submit'
                                 sx={{
                                     marginTop: '16px',
                                     colorScheme: '#b8b8b8 ',
