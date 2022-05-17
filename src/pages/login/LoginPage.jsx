@@ -16,7 +16,7 @@ const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false); 
 
     useEffect( ()=>{
-        if(window.localStorage.length > 0)
+        if(window.localStorage.getItem('token'))
         {
             goToHome(navigate); 
         }
@@ -50,7 +50,7 @@ const LoginPage = () => {
                     password: Yup
                     .string('Insira a sua senha')
                     .min(6, 'Mínimo 6 caracteres')
-                    .max(25, 'Máximo 25 caaracteres')
+                    .max(25, 'Máximo 25 caracteres')
                     .required('Campo obrigátorio')
                 })}
 
