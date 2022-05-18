@@ -1,16 +1,19 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Address, AddressContainer, AddressLabel, EmptyCart, Title, PaymentContainer, PaymentTitle, CartContainer, SubTotal, SubTotalContainer, RightText, InfoContainer, ButtonCart, ButtonContainer, BoxLabel } from './styled'
 import { FormControlLabel, Radio, RadioGroup, FormControl } from '@mui/material'
+import CardProduct from '../../components/cardProduct/CardProduct'
+import { GlobalContext } from '../../global/GlobalContext'
 
 const CartPage = () => {
-    const [cart, setCart] = useState([])
     const [paymentMethod, setPayment] = useState('');
+    const { states, setters } = useContext(GlobalContext)
+    const {cart} = states;
+    const {setCart} = setters;
 
     const onChange = (event) => {
         setPayment(event.target.value)
     }
 
-    console.log(paymentMethod)
     return (
         <CartContainer>
             <Title>
@@ -27,6 +30,9 @@ const CartPage = () => {
             {
                 cart.length > 0 ?
                     <>
+                        {cart.map((product)=>{
+                            return <CardProduct product = {product} key={product.id} />
+                        })}
                     </>
                     :
                     <EmptyCart>
