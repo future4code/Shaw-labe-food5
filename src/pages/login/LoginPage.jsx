@@ -5,7 +5,7 @@ import {goToSignUp } from '../../routes/cordinator';
 import * as Yup from 'yup'; 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { GreyBorderTextField, LoadingDiv, LoginPageContentDiv, LoginPageFormDiv, LoginPageLogoDiv, LoginPageMainDiv } from './styled';
+import { GreyBorderTextField, LoadingDiv, LoadingScreenDiv, LoginPageContentDiv, LoginPageFormDiv, LoginPageLogoDiv, LoginPageMainDiv } from './styled';
 import { Button, InputAdornment, Alert, Snackbar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
@@ -13,14 +13,17 @@ import loading from '../../assets/myLoading.svg';
 import axios from "axios"; 
 import { BaseUrl } from '../../constants/api';
 import {GlobalContext} from '../../global/GlobalContext'
+import splash from '../../assets/splash.png'
 
 
 const LoginPage = () => {
     const navigate = useNavigate(); 
     const [showPassword, setShowPassword] = useState(false); 
     const {states, setters} = useContext(GlobalContext); 
+    const [showLoadingScreen, setShowLoadingScreen] = useState(true); 
     const {user} = states; 
     const {setUser} = setters;
+    
 
     const [open, setOpen] = useState(false)
     const [messageError, setMessageError] = useState('')
@@ -39,7 +42,17 @@ const LoginPage = () => {
         if(token) {
             navigate('/', {replace: true})
         }
+
+        setTimeout(()=> {
+            setShowLoadingScreen(false);
+        }, 2500)
+
+
     },[])
+
+
+
+
 
     const attemptLogin= async (url, body, setOpen) => {
         try 
@@ -55,7 +68,10 @@ const LoginPage = () => {
     }
    
 
-    return (
+     return ( showLoadingScreen ? (<LoadingScreenDiv>
+        <img alt='loading screen' src={splash} /> 
+    </LoadingScreenDiv>) :  
+        ( 
         <LoginPageMainDiv>
 
             <LoginPageLogoDiv>
@@ -214,6 +230,7 @@ const LoginPage = () => {
            
         </LoginPageMainDiv>
     )
+     ) 
 }
 
 export default LoginPage
