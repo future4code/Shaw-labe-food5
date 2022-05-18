@@ -1,55 +1,74 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const CardMeal = styled(Card)`
- margin-top: 20px;
-  margin-left: 4vw;
-  font-family: cursive;
-  font-size: 15px;
-  padding: 20px;
-  height: 300px;
-  overflow: hidden;
-  overflow-y: scroll; 
-  width: 98vw;
+const Container = styled.div`
+width: 100vw;
+display: flex;
+justify-content: center;
+align-items: center;
+`
+const CardMeal = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 328px;
   height: 188px;
   padding: 0 0 16px;
   border-radius: 8px;
   border: solid 1px #b8b8b8;
+  margin-bottom: 7px;
+
+  img {
+    width: 328px;
+    height: 120px;
+    border-radius: 8px 8px 0 0;
+    object-fit: cover;
+  }
+  .Restaurante {
+    width: 296px;
+    height: 18px;
+    margin: 12px 16px 4px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: -0.39px;
+    color: #5cb646;
+  }
+  .Tempo-de-entrega {
+    width: 148px;
+    height: 18px;
+    margin: 4px 8px 0 16px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: -0.39px;
+    color: #b8b8b8;
+  }
+  .Taxa-de-entrega {
+    width: 140px;
+    height: 18px;
+    margin: 4px 16px 0 8px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: -0.39px;
+    text-align: right;
+    color: #b8b8b8;
+  }
 `;
-const TimeDelivery = styled(Button)`
-  width: 148px;
-  height: 18px;
-  margin: 4px 8px 0 16px;
-  font-family: Roboto;
-  font-size: 16px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: -0.39px;
-  color: #b8b8b8;
-`;
-const CardContentt=styled(CardContent)`
-  width: 98vw;
-  height: 18px;
-  margin: 12px 16px 4px;
-  font-family: Roboto;
-  font-size: 16px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: -0.39px;
-  color: var(--mid-green);
+const Delivery = styled.div`
+  display: flex;
 `
 const CardImage = () => {
   //useProtectedPage()
@@ -81,23 +100,20 @@ const CardImage = () => {
   const listRest = rest.map((res) => {
     return (
       <>
-        <CardMeal sx={{ maxWidth: 345 }}>
-          <CardMedia
-            component="img"
-            height="140"
-            image={res.logoUrl}
-            alt="green iguana"
-          />
-          <CardContentt>
-            <Typography gutterBottom variant="h5" component="div">
-              {res.name}
-            </Typography>
-          </CardContentt>
-          <CardActions>
-            <TimeDelivery size="small">{res.deliveryTime} Min</TimeDelivery>
-            <Button size="small"> Frete R${res.shipping},00</Button>
-          </CardActions>
+        <Container>
+        <CardMeal>
+          <div>
+            <img src={res.logoUrl} alt="food" />
+          </div>
+          <div>
+            <h4 className="Restaurante">{res.name}</h4>
+          </div>
+          <Delivery>
+            <p className=" Tempo-de-entrega">{res.deliveryTime} Min</p>
+            <p className="Taxa-de-entrega">Frete R${res.shipping},00</p>
+          </Delivery>
         </CardMeal>
+      </Container>
       </>
     );
   });

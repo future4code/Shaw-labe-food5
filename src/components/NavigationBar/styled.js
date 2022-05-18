@@ -6,4 +6,10 @@ export const Navbar=styled(BottomNavigation)`
     position: fixed;
     bottom: 0;
     border-top: 1px solid #b8b8b8;
+    .MuitButtonBase-root{
+    width: 120px;
+  height: 49px;
+  padding: 11px 46px 11px 47px;
+  color: #5cb646;
+  }
 `

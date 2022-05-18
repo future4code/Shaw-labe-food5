@@ -4,7 +4,8 @@ import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
-import ScroolableTabs from "./ScrollableTabs";
+import ScroolableTabs from '../ScrollableTabs/ScrollableTabs';
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
