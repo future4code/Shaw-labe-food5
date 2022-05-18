@@ -28,8 +28,8 @@ export const goToSignUp = (navigate) => {
 export const goToLastPage = (navigate) => {
     navigate(-1); 
 }
-export const goToAddresspage = (navigate) => {
-    navigate('/address'); 
+export const goToCreateAddresspage = (navigate) => {
+    navigate('signup/address'); 
 }
 
 
