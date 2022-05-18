@@ -58,7 +58,7 @@ const ScroolableTabs = () => {
           <Tab  onClick={()=>filterResult("Carnes")} label="Carnes" />
           <Tab  onClick={()=>filterResult("Baiana")} label="Baiana" />
           <Tab  onClick={()=>filterResult("Petiscos")} label="Petiscos" />
-          <Tab  onClick={()=>filterResult("Mexicana")} label="Mexicana" />         
+          <Tab  onClick={()=>filterResult("Mexicana")} label="Mexicangit " />         
         </Tabs>
       
     </>
