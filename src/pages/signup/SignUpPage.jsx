@@ -6,7 +6,7 @@ import logo from '../../assets/logo.png';
 import * as Yup from 'yup'; 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Button, InputAdornment, TextField } from '@mui/material';
+import { Button, InputAdornment, Alert, Snackbar  } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
 import axios from "axios"; 
@@ -30,6 +30,17 @@ const SignUpPage = () => {
     const {states, setters} = useContext(GlobalContext); 
     const {setUser} = setters; 
 
+    //alert
+    const [open, setOpen] = useState(false)
+    const [messageError, setMessageError] = useState('')
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+    //-------------------------------------------------------
+
     useEffect( ()=>{
         const token = window.sessionStorage.getItem('token')
         
@@ -40,14 +51,15 @@ const SignUpPage = () => {
 
     },[])
 
-    const attemptSignUp = async (url, body) => {
+    const attemptSignUp = async (url, body, setOpen) => {
         try 
         {
             const response = await axios.post(`${BaseUrl}${url}`,body)
             return response; 
         }
         catch (error) {
-            alert(error.response.data.message)
+            setOpen(true)
+            setMessageError(error.response.data.message)
         }
     }
 
@@ -101,11 +113,17 @@ const SignUpPage = () => {
                         password: values.password
                     }
 
-                    let answer = attemptSignUp("signup",body); 
+                    let answer = attemptSignUp("signup",body, setOpen); 
                     answer.then( (response) => {
-                        
-                        window.sessionStorage.setItem("token", response.data.token)
+                       if(response.data.token) 
+                       { 
+                           window.sessionStorage.setItem("token", response.data.token)
                         navigate('./address', {replace: true}); 
+                       }
+
+                       else {
+
+                       }
                         actions.setSubmitting(false)
                         actions.resetForm()
                     }
@@ -279,6 +297,18 @@ const SignUpPage = () => {
             </SignUpPageFormDiv>
 
             </SignUpPageContentDiv>
+
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'top' + 'center'}
+            >
+                <Alert onClose={handleClose} severity="warning" sx={{ width: '100%' }}>
+                    {messageError}
+                </Alert>
+            </Snackbar> 
 
         </SignUpPageMainDiv>
     )
