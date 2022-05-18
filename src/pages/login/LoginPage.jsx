@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { GreyBorderTextField, LoadingDiv, LoginPageContentDiv, LoginPageFormDiv, LoginPageLogoDiv, LoginPageMainDiv } from './styled';
-import { Button, InputAdornment, TextField } from '@mui/material';
+import { Button, InputAdornment, Alert, Snackbar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
 import loading from '../../assets/myLoading.svg';
@@ -22,6 +22,17 @@ const LoginPage = () => {
     const {user} = states; 
     const {setUser} = setters;
 
+    const [open, setOpen] = useState(false)
+    const [messageError, setMessageError] = useState('')
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+
+    
+
     useEffect( ()=>{
         const token = window.sessionStorage.getItem('token')
         
@@ -30,15 +41,16 @@ const LoginPage = () => {
         }
     },[])
 
-    const attemptLogin= async (url, body) => {
+    const attemptLogin= async (url, body, setOpen) => {
         try 
         {
             const response = await axios.post(`${BaseUrl}${url}`,body)
             return response; 
         }
         catch (error) {
-            //CONVERTER PARA TOAST
-            alert(error.response.data.message)
+           
+            setOpen(true)
+            setMessageError(error.response.data.message)
         }
     }
    
@@ -78,7 +90,7 @@ const LoginPage = () => {
                         password: values.password
                     }
 
-                    let answer = attemptLogin("login", body); 
+                    let answer = attemptLogin("login", body, setOpen); 
                     answer.then( (response) => {
                             if(response.data.token)
                             {
@@ -186,6 +198,19 @@ const LoginPage = () => {
 
             <p id='signUpButton' onClick={()=> goToSignUp(navigate)}>Não possui cadastro? Clique aqui.</p>
             </LoginPageContentDiv>
+
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'top' + 'center'}
+               
+            >
+                <Alert onClose={handleClose} severity="warning" sx={{ width: '100%'}}>
+                    {messageError}
+                </Alert>
+            </Snackbar> 
            
         </LoginPageMainDiv>
     )

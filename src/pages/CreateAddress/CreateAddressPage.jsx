@@ -2,7 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import * as Yup from 'yup'; 
-import { Button} from '@mui/material';
+import { Button,Alert, Snackbar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { BaseUrl } from '../../constants/api';
 import loading from '../../assets/myLoading.svg';
@@ -15,17 +15,24 @@ import { goToHome } from '../../routes/cordinator';
 const CreateAddressPage = (props) => {
 
   const navigate = useNavigate(); 
-  const [showPassword, setShowPassword] = useState(false); 
-  const [showCheckPassword, setShowCheckPassword] = useState(false); 
   const {states, setters} = useContext(GlobalContext); 
   const {user} = states; 
   const {setUser} = setters; 
-  const [formInitialState, setFormInitialState] = useState({}); 
+
+  
+  const [open, setOpen] = useState(false)
+  const [messageError, setMessageError] = useState('')
+  const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+          return;
+      }
+      setOpen(false);
+  };
 
 
 //useProtectedPage()
 
-const attemptCreateAddress = async (url, body,token) => {
+const attemptCreateAddress = async (url, body,token, setOpen) => {
 
   try 
   {
@@ -37,7 +44,8 @@ const attemptCreateAddress = async (url, body,token) => {
       return response; 
   }
   catch (error) {
-    alert(error.response.data.message)
+    setOpen(true)
+            setMessageError(error.response.data.message)
   }
 }
 
@@ -98,14 +106,15 @@ const attemptCreateAddress = async (url, body,token) => {
           complement: values.complement, 
           }
          let token = window.sessionStorage.getItem('token')
-         console.log(token)
-         let answer = attemptCreateAddress('address',body,token); 
+       
+         let answer = attemptCreateAddress('address',body,token, setOpen); 
          answer.then( (response) => {
            console.log(response)
            setUser(response.data.user);
            goToHome(navigate); 
            actions.setSubmitting(false)
            actions.resetForm()
+
          }).catch( (error) => {
           console.log("erro dentro do signup form", error);
           actions.setSubmitting(false)
@@ -265,6 +274,17 @@ const attemptCreateAddress = async (url, body,token) => {
 
       </CreateAddressPageFormDiv>
       </CreateAddressPageContentDiv>
+      <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'top' + 'center'}
+            >
+                <Alert onClose={handleClose} severity="warning" sx={{  width: '100%' }}>
+                    {messageError}
+                </Alert>
+            </Snackbar> 
 
       </CreateAddressPageMainDiv>
   )
