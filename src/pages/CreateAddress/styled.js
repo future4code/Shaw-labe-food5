@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { Button, InputAdornment, TextField } from '@mui/material';
 
-export const AddressPageMainDiv = styled.div`
+export const CreateAddressPageMainDiv = styled.div`
 height: 100vh;  
 width: 100vw; 
 font-family: 'Roboto', sans-serif; 
@@ -9,12 +9,15 @@ font-size: 16px;
 letter-spacing: -0.39px;
 color: black; 
 `
-export const AddressPageContentDiv = styled.div`
+export const CreateAddressPageContentDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 align-items: center; 
-margin-top: 28px; 
 
+
+width: 95%; 
+margin: 0 auto; 
+margin-top: 28px; 
 
 
 
@@ -29,7 +32,7 @@ h3{
 `
 
 
-export const AddressPageFormDiv = styled.div`
+export const CreateAddressPageFormDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 font-family: 'Roboto', sans-serif; 
@@ -78,4 +81,20 @@ export const GreyBorderTextField = styled(TextField)`
     font-family: 'Roboto', sans-serif;
   }
  
-`;
+`
+
+export const LoadingDiv = styled.div`
+
+display: flex; 
+width: 85vw; 
+align-items: center; 
+justify-content: center; 
+margin-top: 16px; 
+
+img 
+{
+  max-width: 50px; 
+  max-height: 50px;
+} 
+
+`

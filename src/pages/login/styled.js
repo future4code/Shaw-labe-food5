@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Button, InputAdornment, TextField } from '@mui/material';
+import { flexbox } from "@mui/system";
 
 
 export const LoginPageMainDiv = styled.div`
@@ -99,3 +100,20 @@ export const GreyBorderTextField = styled(TextField)`
   }
  
 `;
+
+export const LoadingDiv = styled.div`
+
+display: flex; 
+width: 85vw; 
+align-items: center; 
+justify-content: center; 
+margin-top: 16px; 
+
+img 
+{
+  max-width: 50px; 
+  max-height: 50px;
+} 
+
+`
+

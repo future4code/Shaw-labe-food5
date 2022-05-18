@@ -1,19 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import { goToHome, goToSignUp } from '../../routes/cordinator';
+import {goToSignUp } from '../../routes/cordinator';
 import * as Yup from 'yup'; 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { GreyBorderTextField, LoginPageContentDiv, LoginPageFormDiv, LoginPageLogoDiv, LoginPageMainDiv } from './styled';
+import { GreyBorderTextField, LoadingDiv, LoginPageContentDiv, LoginPageFormDiv, LoginPageLogoDiv, LoginPageMainDiv } from './styled';
 import { Button, InputAdornment, TextField } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
+import loading from '../../assets/myLoading.svg';
+import axios from "axios"; 
+import { BaseUrl } from '../../constants/api';
+import {GlobalContext} from '../../global/GlobalContext'
 
 
 const LoginPage = () => {
     const navigate = useNavigate(); 
     const [showPassword, setShowPassword] = useState(false); 
+    const {states, setters} = useContext(GlobalContext); 
+    const {user} = states; 
+    const {setUser} = setters;
 
     useEffect( ()=>{
         const token = window.sessionStorage.getItem('token')
@@ -21,10 +28,19 @@ const LoginPage = () => {
         if(token) {
             navigate('/', {replace: true})
         }
-
-
     },[])
 
+    const attemptLogin= async (url, body) => {
+        try 
+        {
+            const response = await axios.post(`${BaseUrl}${url}`,body)
+            return response; 
+        }
+        catch (error) {
+            //CONVERTER PARA TOAST
+            alert(error.response.data.message)
+        }
+    }
    
 
     return (
@@ -62,10 +78,24 @@ const LoginPage = () => {
                         password: values.password
                     }
 
-                    console.log(body); 
+                    let answer = attemptLogin("login", body); 
+                    answer.then( (response) => {
+                            if(response.data.token)
+                            {
+                                setUser(response.data.user); 
+                                window.sessionStorage.setItem("token", response.data.token)
+                                navigate('/', {replace: true}); 
+                            }
+                        actions.setSubmitting(false)
+                        actions.resetForm()
+                    }
 
-                    actions.setSubmitting(false)
-                    actions.resetForm()
+                    ).catch( (error) => {
+                        actions.setSubmitting(false)
+                        actions.resetForm()
+                    })
+
+                   
                 }}
 
                 >
@@ -127,6 +157,9 @@ const LoginPage = () => {
                                        />
                                    )}
                                </Field>
+                               { props.isSubmitting ? <LoadingDiv>
+                                   <img alt='loading' src={loading}/>
+                               </LoadingDiv>:
                                <Button 
                                variant='contained'
                                 fullWidth
@@ -134,15 +167,11 @@ const LoginPage = () => {
                                 type='submit'
                                 sx={{
                                     marginTop: '16px',
-                                    colorScheme: '#b8b8b8 ',
+                                    textTransform:"none",
                                     borderRadius: '0px',
-                                    backgroundColor: '#5cb646',
-                                    fontFamily: "'Roboto', sans-serif",
-                                    textTransform: "none",
-                                    textDecorationColor: '#000000',
-                                    color: '#000000'
+                                   
                                 }}
-                                >Entrar</Button>
+                                >Entrar</Button>}
                             </Form>
                         )
                     }}
