@@ -1,43 +1,25 @@
-import styled from "styled-components";
+import styled from "styled-components"
 import { Button, InputAdornment, TextField } from '@mui/material';
-import { flexbox } from "@mui/system";
 
-
-export const LoginPageMainDiv = styled.div`
-display: grid; 
-grid-template-rows: 146px 1fr; 
+export const CreateAddressPageMainDiv = styled.div`
+height: 100vh;  
+width: 100vw; 
 font-family: 'Roboto', sans-serif; 
-font-weight: 500; 
 font-size: 16px; 
 letter-spacing: -0.39px;
 color: black; 
-
 `
-
-export const LoginPageLogoDiv = styled.div`
-display: flex; 
-flex-direction: column; 
-
-align-items: center; 
-justify-content: flex-end; 
-
-img{
-    max-width: 104px; 
-    max-height: 58px; 
-}
-
-`
-
-export const LoginPageContentDiv = styled.div`
+export const CreateAddressPageContentDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 align-items: center; 
 
+
+width: 95%; 
+margin: 0 auto; 
 margin-top: 28px; 
 
-#signUpButton{
-    margin-top: 28px; 
-}
+
 
 p{
     font-family: 'Roboto', sans-serif;
@@ -49,7 +31,8 @@ h3{
 }
 `
 
-export const LoginPageFormDiv = styled.div`
+
+export const CreateAddressPageFormDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 font-family: 'Roboto', sans-serif; 
@@ -82,7 +65,6 @@ Button{
 
 `
 
-
 export const GreyBorderTextField = styled(TextField)`
   & label.Mui-focused {
     color:  #b8b8b8 ;
@@ -99,7 +81,7 @@ export const GreyBorderTextField = styled(TextField)`
     font-family: 'Roboto', sans-serif;
   }
  
-`;
+`
 
 export const LoadingDiv = styled.div`
 
@@ -114,17 +96,5 @@ img
   max-width: 50px; 
   max-height: 50px;
 } 
-
-`
-
-export const LoadingScreenDiv = styled.div`
-
-height: 100vh; 
-width: 100vw; 
-
-img{
-  height: 100vh; 
-width: 100vw; 
-}
 
 `

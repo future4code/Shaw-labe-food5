@@ -6,19 +6,21 @@ import logo from '../../assets/logo.png';
 import * as Yup from 'yup'; 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Button, InputAdornment, TextField } from '@mui/material';
+import { Button, InputAdornment, Alert, Snackbar  } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
 import axios from "axios"; 
 import { BaseUrl } from '../../constants/api';
-import loading from '../../assets/loading.gif'
+import loading from '../../assets/myLoading.svg';
 import {GlobalContext} from '../../global/GlobalContext'
+import { LoadingDiv } from '../CreateAddress/styled';
 
 
 
 
 //token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InFaZWJJS21NR3Z3VDROT1NIcWVmIiwibmFtZSI6InRlc3RlIHRlc3RlIiwiZW1haWwiOiJ0ZXN0ZUB0ZXN0YW5kby5jb20iLCJjcGYiOiI1NTUuNTU1LjU1NS0wMCIsImhhc0FkZHJlc3MiOmZhbHNlLCJpYXQiOjE2NTI4MTQ0Nzl9.94KvZFamtttWtfFVe8S4wW23jX5l0VYy-nqR2jGSmpQ
 
+//martin token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InIxNUVVT3JjWFk2dTZiM0M0UDRQIiwibmFtZSI6Ik1hcnRpbiBTZWphcyIsImVtYWlsIjoibWFydGluQGxhYmVudS5jb20iLCJjcGYiOiIxNzMuMDAwLjAwMC0wMCIsImhhc0FkZHJlc3MiOmZhbHNlLCJpYXQiOjE2NTI4MzkwMzN9.tcyebwQVcsIrgQs0J55eMmKZ2muotWbuPyTeBX5arxI"
 
 
 const SignUpPage = () => {
@@ -27,6 +29,17 @@ const SignUpPage = () => {
     const [showCheckPassword, setShowCheckPassword] = useState(false); 
     const {states, setters} = useContext(GlobalContext); 
     const {setUser} = setters; 
+
+    //alert
+    const [open, setOpen] = useState(false)
+    const [messageError, setMessageError] = useState('')
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+    //-------------------------------------------------------
 
     useEffect( ()=>{
         const token = window.sessionStorage.getItem('token')
@@ -38,15 +51,15 @@ const SignUpPage = () => {
 
     },[])
 
-    const attemptSignUp = async (url, body) => {
+    const attemptSignUp = async (url, body, setOpen) => {
         try 
         {
             const response = await axios.post(`${BaseUrl}${url}`,body)
             return response; 
         }
         catch (error) {
-            console.log(error)
-            alert(error)
+            setOpen(true)
+            setMessageError(error.response.data.message)
         }
     }
 
@@ -100,19 +113,29 @@ const SignUpPage = () => {
                         password: values.password
                     }
 
-                    let answer = attemptSignUp("signup",body); 
+                    let answer = attemptSignUp("signup",body, setOpen); 
                     answer.then( (response) => {
-                        console.log(response)
-                        setUser(response.data.user); 
-                        window.sessionStorage.setItem('token', response.data.token)
-                        navigate('/address', {replace: true}); 
+                       if(response.data.token) 
+                       { 
+                           window.sessionStorage.setItem("token", response.data.token)
+                        navigate('./address', {replace: true}); 
+                       }
+
+                       else {
+
+                       }
+                        actions.setSubmitting(false)
+                        actions.resetForm()
                     }
 
-                    ).catch( (error) => console.log("erro dentro do signup form", error))
+                    ).catch( (error) => {
+                        console.log("erro dentro do signup form", error);
+                        actions.setSubmitting(false)
+                        actions.resetForm()
+                    })
                     
 
-                    actions.setSubmitting(false)
-                    actions.resetForm()
+                    
                 }}
                 >
                     { (props) => {
@@ -248,9 +271,9 @@ const SignUpPage = () => {
                                    )}
                                </Field>
 
-                               { props.isSubmitting ? <div>
+                               { props.isSubmitting ? <LoadingDiv>
                                    <img alt='loading' src={loading}/>
-                               </div>:
+                               </LoadingDiv>:
                                <Button 
                                variant='contained'
                                 fullWidth
@@ -274,6 +297,18 @@ const SignUpPage = () => {
             </SignUpPageFormDiv>
 
             </SignUpPageContentDiv>
+
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'top' + 'center'}
+            >
+                <Alert onClose={handleClose} severity="warning" sx={{ width: '100%' }}>
+                    {messageError}
+                </Alert>
+            </Snackbar> 
 
         </SignUpPageMainDiv>
     )

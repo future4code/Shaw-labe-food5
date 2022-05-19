@@ -1,19 +1,40 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo.png';
-import { goToHome, goToSignUp } from '../../routes/cordinator';
+import {goToSignUp } from '../../routes/cordinator';
 import * as Yup from 'yup'; 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { GreyBorderTextField, LoginPageContentDiv, LoginPageFormDiv, LoginPageLogoDiv, LoginPageMainDiv } from './styled';
-import { Button, InputAdornment, TextField } from '@mui/material';
+import { GreyBorderTextField, LoadingDiv, LoadingScreenDiv, LoginPageContentDiv, LoginPageFormDiv, LoginPageLogoDiv, LoginPageMainDiv } from './styled';
+import { Button, InputAdornment, Alert, Snackbar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
+import loading from '../../assets/myLoading.svg';
+import axios from "axios"; 
+import { BaseUrl } from '../../constants/api';
+import {GlobalContext} from '../../global/GlobalContext'
+import splash from '../../assets/splash.png'
 
 
 const LoginPage = () => {
     const navigate = useNavigate(); 
     const [showPassword, setShowPassword] = useState(false); 
+    const {states, setters} = useContext(GlobalContext); 
+    const [showLoadingScreen, setShowLoadingScreen] = useState(true); 
+    const {user} = states; 
+    const {setUser} = setters;
+    
+
+    const [open, setOpen] = useState(false)
+    const [messageError, setMessageError] = useState('')
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+
+    
 
     useEffect( ()=>{
         const token = window.sessionStorage.getItem('token')
@@ -22,12 +43,35 @@ const LoginPage = () => {
             navigate('/', {replace: true})
         }
 
+        setTimeout(()=> {
+            setShowLoadingScreen(false);
+        }, 2500)
+
 
     },[])
 
+
+
+
+
+    const attemptLogin= async (url, body, setOpen) => {
+        try 
+        {
+            const response = await axios.post(`${BaseUrl}${url}`,body)
+            return response; 
+        }
+        catch (error) {
+           
+            setOpen(true)
+            setMessageError(error.response.data.message)
+        }
+    }
    
 
-    return (
+     return ( showLoadingScreen ? (<LoadingScreenDiv>
+        <img alt='loading screen' src={splash} /> 
+    </LoadingScreenDiv>) :  
+        ( 
         <LoginPageMainDiv>
 
             <LoginPageLogoDiv>
@@ -62,10 +106,24 @@ const LoginPage = () => {
                         password: values.password
                     }
 
-                    console.log(body); 
+                    let answer = attemptLogin("login", body, setOpen); 
+                    answer.then( (response) => {
+                            if(response.data.token)
+                            {
+                                setUser(response.data.user); 
+                                window.sessionStorage.setItem("token", response.data.token)
+                                navigate('/', {replace: true}); 
+                            }
+                        actions.setSubmitting(false)
+                        actions.resetForm()
+                    }
 
-                    actions.setSubmitting(false)
-                    actions.resetForm()
+                    ).catch( (error) => {
+                        actions.setSubmitting(false)
+                        actions.resetForm()
+                    })
+
+                   
                 }}
 
                 >
@@ -127,6 +185,9 @@ const LoginPage = () => {
                                        />
                                    )}
                                </Field>
+                               { props.isSubmitting ? <LoadingDiv>
+                                   <img alt='loading' src={loading}/>
+                               </LoadingDiv>:
                                <Button 
                                variant='contained'
                                 fullWidth
@@ -134,15 +195,11 @@ const LoginPage = () => {
                                 type='submit'
                                 sx={{
                                     marginTop: '16px',
-                                    colorScheme: '#b8b8b8 ',
+                                    textTransform:"none",
                                     borderRadius: '0px',
-                                    backgroundColor: '#5cb646',
-                                    fontFamily: "'Roboto', sans-serif",
-                                    textTransform: "none",
-                                    textDecorationColor: '#000000',
-                                    color: '#000000'
+                                   
                                 }}
-                                >Entrar</Button>
+                                >Entrar</Button>}
                             </Form>
                         )
                     }}
@@ -157,9 +214,23 @@ const LoginPage = () => {
 
             <p id='signUpButton' onClick={()=> goToSignUp(navigate)}>Não possui cadastro? Clique aqui.</p>
             </LoginPageContentDiv>
+
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'top' + 'center'}
+               
+            >
+                <Alert onClose={handleClose} severity="warning" sx={{ width: '100%'}}>
+                    {messageError}
+                </Alert>
+            </Snackbar> 
            
         </LoginPageMainDiv>
     )
+     ) 
 }
 
 export default LoginPage

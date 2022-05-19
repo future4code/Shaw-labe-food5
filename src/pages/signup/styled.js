@@ -34,9 +34,7 @@ align-items: center;
 margin-top: 28px; 
 
 
-#signUpButton{
-    margin-top: 28px; 
-}
+
 
 p{
     font-family: 'Roboto', sans-serif;
