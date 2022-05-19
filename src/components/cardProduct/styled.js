@@ -5,14 +5,15 @@ import { Button } from '@mui/material'
 export const CardContainer = styled.div`
     border-radius: 8px;
     border: solid 1px #b8b8b8;
-    height: 112px;
+    height: 130px;
     display: flex;
     width: 100%;
 `
 
 export const CardImage = styled.img`
     width: 96px;
-    height: 110.5px;
+    height: 128.5px;
+    margin-top: -0.5px;
     border-radius: 8px 0px 0px 8px;
 `
 
@@ -44,7 +45,7 @@ export const CardButton = styled.div`
    flex-direction: column;
    justify-content: space-between;
    align-items: flex-end;
-   height: 112px;
+   height: 130px;
    width: 90px;
    position:relative;
    top:-1px;

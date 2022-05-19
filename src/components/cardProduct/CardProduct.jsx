@@ -5,9 +5,8 @@ import { GlobalContext } from "../../global/GlobalContext"
 import { CardButton, CardContainer, CardImage, CardInfo, Description, Price, Product, Quantity } from "./styled"
 
 
-const CardProduct = ({product}) => {
+const CardProduct = ({product, addButton, setProductId, removeButton}) => {
     const [checkCart, setCheckCart] = useState([])
-    const [quantity, setQuantity] = useState(2)
     const { states, setters } = useContext(GlobalContext)
     const {cart} = states;
     const {setCart} = setters;
@@ -17,24 +16,49 @@ const CardProduct = ({product}) => {
     },[cart])
 
     const removeItem = (id) => {
+        // remove do card
         const cartCopy = [...cart]
         const index = cartCopy.findIndex((item)=>{
             return item.id===id
         })
         cartCopy.splice(index,1)
+        window.localStorage.setItem('cart', JSON.stringify(cartCopy))
         setCart(cartCopy)
+
+        // atualiza no array do restaurante
+        const restaurant = JSON.parse(window.localStorage.getItem('restaurant'))
+        const restaurantCopy = [...restaurant.restaurant.products]
+
+        const product = restaurantCopy.filter((item) => {
+            return item.id === id
+        })
+
+        const productCopy = { ...product[0], quantity: 0 }
+
+        const indexR = restaurantCopy.findIndex((item) => item.id === id)
+
+        restaurantCopy[indexR] = productCopy
+        window.localStorage.setItem('restaurant', JSON.stringify({
+            ...restaurant,
+            restaurant: {
+                ...restaurant.restaurant, products: restaurantCopy
+            }
+        }))
+        removeButton && removeButton(id)
     }
+
     const addItem = (item) => {
-        const cartCopy = [...cart, item]
-        setCart(cartCopy)
+        addButton()
+        setProductId(item.id)
     }
+
     return(
         <CardContainer>
             <CardImage src={product.photoUrl} alt={product.name}/>
             <CardInfo>
                 <Product>{product.name}</Product>
                 <Description>{product.description}</Description>
-                <Price>R${product.price},00</Price>
+                <Price>R${product.price}</Price>
             </CardInfo>
             <CardButton checkCart ={checkCart}>
                 {product.quantity ? <Quantity>{product.quantity}</Quantity>:<div></div>}

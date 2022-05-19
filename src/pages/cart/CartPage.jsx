@@ -1,18 +1,26 @@
-import React, { useContext, useState } from 'react'
-import { Address, AddressContainer, AddressLabel, EmptyCart, Title, PaymentContainer, PaymentTitle, CartContainer, SubTotal, SubTotalContainer, RightText, InfoContainer, ButtonCart, ButtonContainer, BoxLabel } from './styled'
+import React, { useContext, useEffect, useState } from 'react'
+import { Address, AddressContainer, AddressLabel, EmptyCart, Title, PaymentContainer, PaymentTitle, CartContainer, SubTotal, SubTotalContainer, RightText, InfoContainer, ButtonCart, ButtonContainer, BoxLabel, CardsContainer } from './styled'
 import { FormControlLabel, Radio, RadioGroup, FormControl } from '@mui/material'
 import CardProduct from '../../components/cardProduct/CardProduct'
 import { GlobalContext } from '../../global/GlobalContext'
 
 const CartPage = () => {
     const [paymentMethod, setPayment] = useState('');
-    const { states, setters } = useContext(GlobalContext)
+    const { states } = useContext(GlobalContext)
     const {cart} = states;
-    const {setCart} = setters;
+    const [values, setValues] = useState(0)
+
 
     const onChange = (event) => {
         setPayment(event.target.value)
     }
+    useEffect(()=>{
+        let total = 0;
+        cart.forEach((product)=>{
+            total = total + product.price * product.quantity
+            setValues(total)
+        })
+    },[cart])
 
     return (
         <CartContainer>
@@ -29,11 +37,12 @@ const CartPage = () => {
             </AddressContainer>
             {
                 cart.length > 0 ?
-                    <>
+                    <CardsContainer>
                         {cart.map((product)=>{
+
                             return <CardProduct product = {product} key={product.id} />
                         })}
-                    </>
+                    </CardsContainer>
                     :
                     <EmptyCart>
                         Carrinho vazio
@@ -46,7 +55,7 @@ const CartPage = () => {
 
                     <SubTotalContainer>
                         <p>SUBTOTAL</p>
-                        <SubTotal>R$0,00</SubTotal>
+                        <SubTotal>R${values}</SubTotal>
                     </SubTotalContainer>
 
                     <PaymentContainer>

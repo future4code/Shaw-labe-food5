@@ -80,6 +80,15 @@ export const PaymentTitle = styled.p`
     margin-bottom: 11px;
 `
 
+export const CardsContainer = styled.div`
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap:8px;
+    overflow-y: scroll;
+    height: 50vh;
+    margin-bottom: 16px;
+`
 
 export const BoxLabel = styled(Box)({
     fontSize: '16px',

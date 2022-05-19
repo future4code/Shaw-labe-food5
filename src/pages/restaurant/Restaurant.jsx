@@ -3,139 +3,180 @@ import { GlobalContext } from '../../global/GlobalContext';
 import Header from '../../components/Header/Header'
 import { CardsContainer, Categories, CategoryTitle, InfoDiv, Infos, Logo, Name, PageContainer, RestaurantContainer, RestaurantInfo } from './styled';
 import CardProduct from '../../components/cardProduct/CardProduct';
+import { Box, Button, FormControl, MenuItem, Modal, Select, Typography } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { BaseUrl } from '../../constants/api'
 
-const restaurant = {
-    "products": [
-        {
-            "id": "3vcYYSOEf8dKeTPd7vHe",
-            "name": "Pastel",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031408_66194519.jpg",
-            "category": "Pastel",
-            "description": "Pastel autêntico, feito na hora!",
-            "price": 3
-        },
-        {
-            "id": "5omTFSOBYiTqeiDwhiBx",
-            "description": "Esfiha deliciosa, receita secreta do Habibs.",
-            "price": 1,
-            "category": "Salgado",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031403_66194479.jpg",
-            "name": "Bibsfiha queijo"
-        },
-        {
-            "id": "5qVBu990QDEcBPOzitMy",
-            "name": "Kibe",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031407_66194536.jpg",
-            "description": "Kibe árabe de verdade",
-            "price": 5.5,
-            "category": "Salgado"
-        },
-        {
-            "id": "6ZNrnQB0CgCZHf31xCRu",
-            "category": "Lanche",
-            "description": "Da Arábia para o mundo!",
-            "name": "Beirute",
-            "price": 22.9,
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031424_66194598.jpg"
-        },
-        {
-            "id": "8CKulpHeAAm1QQqWpReI",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031409_66194560.jpg",
-            "description": "Batata frita crocante e sequinha.",
-            "name": "Batata Frita",
-            "price": 9.5,
-            "category": "Acompanhamento"
-        },
-        {
-            "id": "KqHR80VJp9my0eBLEHvk",
-            "category": "Pizza",
-            "name": "Pizza",
-            "description": "Pizza crocante de diversos sabores",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031245_66194219.jpg",
-            "price": 31.9
-        },
-        {
-            "id": "XHhajKAtvIH2Dq6F83PX",
-            "category": "Bebida",
-            "name": "Suco",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031439_71805445.jpg",
-            "description": "Laranja, Acerola ou Maçã",
-            "price": 7.9
-        },
-        {
-            "id": "bEj2JorVLWo86iJf7OF9",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/t_medium/pratos/f62f7746-4888-4e81-a9b0-93bf5453c51a/202103180149_woHq_s.jpg",
-            "price": 4,
-            "description": "Coca cola, Sprite ou Guaraná",
-            "category": "Bebida",
-            "name": "Refrigerante"
-        },
-        {
-            "id": "fMMfstMTxeos8NWTS4j1",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907151009_76679579.jpg",
-            "price": 1,
-            "category": "Salgado",
-            "name": "Bibsfiha frango",
-            "description": "Esfiha deliciosa, receita secreta do Habibs."
-        },
-        {
-            "id": "xhq0QgZXklGSmaBDy6KQ",
-            "description": "Esfiha deliciosa, receita secreta do Habibs.",
-            "name": "Bibsfiha carne",
-            "photoUrl": "https://static-images.ifood.com.br/image/upload/f_auto,t_high/pratos/65c38aa8-b094-413d-9a80-ddc256bfcc78/201907031404_66194495.jpg",
-            "category": "Salgado",
-            "price": 1
+
+const getRequest = (endpoint, setData) => {
+    const token = window.sessionStorage.getItem('token')
+    const headers = {
+        headers: {
+            auth: token
         }
-    ],
-    "id": "1",
-    "address": "Rua das Margaridas, 110 - Jardim das Flores",
-    "shipping": 6,
-    "description": "Habib's é uma rede de restaurantes de comida rápida brasileira especializada em culinária árabe, os restaurantes vendem mais de 600 milhões de esfirras por ano. A empresa emprega 22 mil colaboradores e tem 421 unidades distribuídas em mais de cem municípios em 20 unidades federativas.",
-    "logoUrl": "https://firebasestorage.googleapis.com/v0/b/missao-newton.appspot.com/o/futureFoodsRestaurants%2Fhabibs.jpg?alt=media&token=a30ea547-3a3b-4e80-b58e-b8dc976697de",
-    "category": "Árabe",
-    "deliveryTime": 60,
-    "name": "Habibs"
+    }
+    axios.get(`${BaseUrl}${endpoint}`, headers)
+        .then((res) => {
+            setData(res.data)
+        })
 }
+
 const RestaurantPage = () => {
-    const [quantity, setQuantity] = useState(2)
+
+    const [quantity, setQuantity] = useState(1)
     const [categories, setCategories] = useState([])
+    const [restaurant, setRestaurant] = useState({})
+    const [productId, setProductId] = useState('')
+
+    const params = useParams()
+
+    useEffect(() => {
+        const checkLocal = window.localStorage.getItem('restaurant')
+        checkLocal && setRestaurant(JSON.parse(checkLocal))
+        !checkLocal && getRequest(`restaurants/${params.id}`, setRestaurant)
+    }, [])
+
+    useEffect(()=>{
+        console.log('oi')
+        window.localStorage.removeItem('restaurant')
+    },[])
+
+    
+
+    const handleChange = (event) => {
+        setQuantity(event.target.value);
+    };
+
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     const { states, setters } = useContext(GlobalContext)
     const { cart } = states;
     const { setCart } = setters;
+
     useEffect(() => {
-        const allCategories = restaurant.products.map((product) => product.category)
-        const categories = allCategories.filter((cur, i) => {
+        const allCategories = restaurant.restaurant?.products.map((product) => product.category)
+        const categories = allCategories?.filter((cur, i) => {
             return allCategories.indexOf(cur) === i
         })
         setCategories(categories)
-    }, [])
+    }, [restaurant])
+
+
+    useEffect(()=>{
+        window.localStorage.setItem('restaurant', JSON.stringify(restaurant))
+    }, [restaurant])
+
+
+    const style = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '90%',
+        height: '216px',
+        bgcolor: '#fff',
+        boxShadow: 24,
+        p: '31px 16px 21px 16px',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '28px'
+    };
+
+    const quantityOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    const addCart = () => {
+        const restaurantCopy = [...restaurant.restaurant.products]
+
+        const product = restaurantCopy.filter((item) => {
+            return item.id === productId
+        })
+
+        const productCopy = { ...product[0], quantity: quantity }
+        setCart([...cart, productCopy])
+
+        window.localStorage.setItem('cart', JSON.stringify([...cart, productCopy]))
+
+        const index = restaurantCopy.findIndex((item) => item.id === productId)
+
+        restaurantCopy[index] = productCopy
+
+        setRestaurant({
+            ...restaurant,
+            restaurant: {
+                ...restaurant.restaurant, products: restaurantCopy
+            }
+        })
+
+        handleClose()
+        setQuantity(1)
+
+    }
+    const remove = (id) => {
+        console.log('oi')
+        const restaurantCopy = [...restaurant.restaurant.products]
+
+        const product = restaurantCopy.filter((item) => {
+            return item.id === id
+        })
+
+        const productCopy = { ...product[0], quantity: 0 }
+
+        const index = restaurantCopy.findIndex((item) => item.id === id)
+
+        restaurantCopy[index] = productCopy
+
+        setRestaurant({
+            ...restaurant,
+            restaurant: {
+                ...restaurant.restaurant, products: restaurantCopy
+            }
+        })  
+
+        window.localStorage.setItem('restaurant', JSON.stringify({
+            ...restaurant,
+            restaurant: {
+                ...restaurant.restaurant, products: restaurantCopy
+            }
+        }))
+
+    }
+
     return (
         <PageContainer>
             <Header title={'Restaurante'} />
             <RestaurantContainer>
-                <Logo src={restaurant.logoUrl} />
+                <Logo src={restaurant.restaurant?.logoUrl} />
                 <RestaurantInfo>
-                    <Name>{restaurant.name}</Name>
-                    <Infos>{restaurant.category}</Infos>
+                    <Name>{restaurant.restaurant?.name}</Name>
+                    <Infos>{restaurant.restaurant?.category}</Infos>
                     <InfoDiv>
-                        <Infos>{restaurant.deliveryTime} min</Infos>
-                        <Infos>Frete R${restaurant.shipping},00</Infos>
+                        <Infos>{restaurant.restaurant?.deliveryTime} min</Infos>
+                        <Infos>Frete R${restaurant.restaurant?.shipping},00</Infos>
                     </InfoDiv>
-                    <Infos>{restaurant.address}</Infos>
+                    <Infos>{restaurant.restaurant?.address}</Infos>
                 </RestaurantInfo>
 
                 {
-                    categories.map((item, index) => {
+                    categories?.map((item, index) => {
                         return (
                             <Categories key={index}>
                                 <CategoryTitle>{item}</CategoryTitle>
                                 <CardsContainer>
 
                                     {
-                                        restaurant.products.map((product) => {
+                                        restaurant.restaurant.products.map((product) => {
                                             if (item === product.category) {
                                                 return (
-                                                    <CardProduct product={product} />
+                                                    <CardProduct 
+                                                        key={product.id}
+                                                        product={product} 
+                                                        addButton={handleOpen}
+                                                        setProductId={setProductId}
+                                                        removeButton={remove}
+                                                    />
                                                 )
                                             }
                                         })
@@ -145,9 +186,38 @@ const RestaurantPage = () => {
                         )
                     })
                 }
-
-
             </RestaurantContainer>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography variant="h6" component="h2" sx={{ fontSize: '16px', letterSpacing: '-0.39px', textAlign: 'center' }}>
+                        Selecione a quantidade desejada
+                    </Typography>
+                    <FormControl sx={{ width: '100%' }}>
+                        <Select
+                            value={quantity}
+                            onChange={handleChange}
+                        >
+                            {
+                                quantityOptions.map((option) => {
+                                    return <MenuItem key={option} value={option}>{option}</MenuItem>
+                                })
+                            }
+
+                        </Select>
+                    </FormControl>
+                    <Button
+                        sx={{ fontSize: '16px', letterSpacing: '-0.39px', alignSelf: 'flex-end', width: '200px', p: '1px' }}
+                        onClick={addCart}
+                    >
+                        Adicionar ao carrinho
+                    </Button>
+                </Box>
+            </Modal>
         </PageContainer>
     )
 }
