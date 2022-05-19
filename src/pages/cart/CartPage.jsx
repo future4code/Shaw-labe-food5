@@ -200,7 +200,7 @@ const CartPage = () => {
 
                 <SubTotalContainer>
                     <p>SUBTOTAL</p>
-                    <SubTotal>R${values.replace('.',',')}</SubTotal>
+                    <SubTotal>R${values && values.replace('.',',')}</SubTotal>
                 </SubTotalContainer>
 
                 <PaymentContainer>
