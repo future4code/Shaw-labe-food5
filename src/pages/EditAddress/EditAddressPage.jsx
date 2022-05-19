@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import * as Yup from 'yup'; 
+import {useProtectedPage} from '../../hooks/useProtectedPage'
 import { Button,Alert, Snackbar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import { BaseUrl } from '../../constants/api';
@@ -9,85 +10,49 @@ import loading from '../../assets/myLoading.svg';
 import {GlobalContext} from '../../global/GlobalContext'
 import { EditAddressPageContentDiv, EditAddressPageFormDiv, EditAddressPageMainDiv, GreyBorderTextField, LoadingDiv, LoadingScreenDiv } from './styled';
 import axios from 'axios';
-import { goToHome } from '../../routes/cordinator';
 import splash from '../../assets/splash.png'
-
-
-
+import { getUserAddress, attemptEditAddress } from '../../services/requests';
 
 const  EditAddressPage = () => {
   const navigate = useNavigate(); 
   const {states, setters} = useContext(GlobalContext); 
-  const {user} = states; 
-  const {setUser} = setters; 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [openSuccess,setOpenSuccess] = useState(false)
   const [messageError, setMessageError] = useState('')
   const [userAddress, setUserAddress] = useState({}); 
-  const handleClose = (event, reason) => {
-      if (reason === 'clickaway') {
-          return;
-      }
-      setOpen(false);
-  };
 
 
+  useProtectedPage(); 
+
+ //useEffect de startup, pega token e endereco
   useEffect( ()=>{
     let token = window.sessionStorage.getItem('token'); 
-    getUserAddress(`profile/address`,token)
+    getUserAddress(`profile/address`,token, setOpen, setMessageError, setUserAddress)
   },[])
 
-
-  const getUserAddress = async (url, token, setOpen) => {
-    try {
-      const response = await axios.get(`${BaseUrl}${url}`, {
-        headers: { 
-            'auth': token
-          }
-        })
-        setUserAddress(response.data.address)
-
+   //funcao de fechar pop-up de sucesso ou erro de requisicao
+   const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+        return;
     }
-    catch(error) {
-      setOpen(true)
-      setMessageError(error.response.data.message)
-    }
-  }
-
-  const attemptEditAddress = async (url, body,token, setOpen) => {
-
-    try 
-    {
-        const response = await axios.put(`${BaseUrl}${url}`, body, {
-          headers: { 
-              'auth': token
-            }
-          })
-        return response; 
-    }
-    catch (error) {
-      setOpen(true)
-      setMessageError(error.response.data.message)
-    }
-  }
+    setOpen(false);
+    setOpenSuccess(false)
+};
 
 
-
-//ternario para n mostrar tela ate tela estiver carregado
+//ternario para nao mostrar tela ate tela estiver carregado endereço
   return ( userAddress && userAddress.city ?
     (<EditAddressPageMainDiv>
       <Header title="Endereço"/>
 
       <EditAddressPageContentDiv>
-        
-      
-
       <EditAddressPageFormDiv>
-
+      {/* Formik é a biblioteca usada  */}
         <Formik
         initialValues={{
           street: userAddress.street,
           number: userAddress.number,
-          complement: userAddress.complement, 
+          complement: userAddress.complement === null? '' : userAddress.complement, 
           neighbourhood: userAddress.neighbourhood,
           city: userAddress.city, 
           state: userAddress.state,
@@ -103,6 +68,7 @@ const  EditAddressPage = () => {
           .max(10000, 'Nao pode ser maior que 10000')
           .required('Campo obrigátorio'),
           complement: Yup.string('Insira o complemento')
+          .nullable(true)
           .max(15, 'maximo 15 caracteres'),
           neighbourhood: Yup.string('Insira o seu bairro')
           .min(3, "Mínimo 3 caracteres")
@@ -113,13 +79,14 @@ const  EditAddressPage = () => {
           .max(30, "Máximo 30 caracteres")
           .required('Campo obrigátorio'),
           state: Yup.string('Insira o nome do seu estado')
-          .min(3, "Mínimo 3 caracteres")
+          .min(2, "Mínimo 2 caracteres")
           .max(30, "Máximo 30 caracteres")
           .required('Campo obrigátorio'),
 
         })}
 
         onSubmit = {(values,actions) => {
+
           let body = {
           street: values.street,
           number: Number(values.number),
@@ -128,19 +95,16 @@ const  EditAddressPage = () => {
           state: values.state,
           complement: values.complement, 
           }
-         let token = window.sessionStorage.getItem('token')
-       
-         let answer = attemptEditAddress('address',body,token, setOpen); 
-         answer.then( (response) => {
-          
-           setUser(response.data.user);
-          
-           actions.setSubmitting(false)
-          
 
+         let token = window.sessionStorage.getItem('token')
+         let answer = attemptEditAddress('address',body,token, setOpen, setMessageError); 
+
+         answer.then( (response) => { 
+          window.sessionStorage.setItem("token", response.data.token)
+           setOpenSuccess(true); 
+           actions.setSubmitting(false)
          }).catch( (error) => {
           actions.setSubmitting(false)
-          actions.resetForm()
       })
         }}
         >
@@ -269,23 +233,24 @@ const  EditAddressPage = () => {
                     />
                   )}
                 </Field>
-                { props.isSubmitting ? <LoadingDiv>
-                                <img alt='loading' src={loading}/>
-                               </LoadingDiv>:
-                               <Button 
-                               variant='contained'
-                                fullWidth
-                                disableElevation
-                                type='submit'
-                                sx={{
-                                    marginTop: '16px',
-                                    textTransform:"none",
-                                    borderRadius: '0px',
-                                   
+
+                { props.isSubmitting ? 
+                    <LoadingDiv>
+                        <img alt='loading' src={loading}/>
+                    </LoadingDiv>
+                          :
+                    <Button 
+                      variant='contained'
+                      fullWidth
+                      disableElevation
+                      type='submit'
+                      sx={{
+                           marginTop: '16px',
+                           textTransform:"none",
+                           borderRadius: '0px',                   
                                 }}
-                                >Salvar</Button>}
-
-
+                    >Salvar</Button>
+                 }
               </Form>
             )
           }}
@@ -294,6 +259,8 @@ const  EditAddressPage = () => {
 
       </EditAddressPageFormDiv>
       </EditAddressPageContentDiv>
+
+      {/* pop ups de erros e sucesso */}
       <Snackbar
                 open={open}
                 autoHideDuration={6000}
@@ -306,10 +273,23 @@ const  EditAddressPage = () => {
                 </Alert>
             </Snackbar> 
 
+            <Snackbar
+                open={openSuccess}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'2'}
+            >
+                <Alert onClose={handleClose} severity="success" sx={{  width: '100%' }}>
+                    {"Endereço atualizado com sucesso!"}
+                </Alert>
+            </Snackbar> 
+
+
       </EditAddressPageMainDiv>) : (<LoadingScreenDiv>
         <img alt='loading screen' src={splash} /> 
     </LoadingScreenDiv>)
   )
 }
 
-export default EditAddressPage
+export default EditAddressPage;

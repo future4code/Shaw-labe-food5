@@ -1,16 +1,15 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useContext} from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import * as Yup from 'yup'; 
 import { Button,Alert, Snackbar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
-import { BaseUrl } from '../../constants/api';
 import loading from '../../assets/myLoading.svg';
 import {GlobalContext} from '../../global/GlobalContext'
 import { CreateAddressPageContentDiv, CreateAddressPageFormDiv, CreateAddressPageMainDiv, GreyBorderTextField, LoadingDiv } from './styled';
-import {useProtectedPage} from '../../hooks/useProtectedPage'
-import axios from 'axios';
 import { goToHome } from '../../routes/cordinator';
+import { attemptCreateAddress } from '../../services/requests';
+
 
 const CreateAddressPage = (props) => {
 
@@ -18,37 +17,16 @@ const CreateAddressPage = (props) => {
   const {states, setters} = useContext(GlobalContext); 
   const {user} = states; 
   const {setUser} = setters; 
-
-  
   const [open, setOpen] = useState(false)
   const [messageError, setMessageError] = useState('')
+
+
   const handleClose = (event, reason) => {
       if (reason === 'clickaway') {
           return;
       }
       setOpen(false);
   };
-
-
-//useProtectedPage()
-
-const attemptCreateAddress = async (url, body,token, setOpen) => {
-
-  try 
-  {
-      const response = await axios.put(`${BaseUrl}${url}`, body, {
-        headers: { 
-            'auth': token
-          }
-        })
-      return response; 
-  }
-  catch (error) {
-    setOpen(true)
-            setMessageError(error.response.data.message)
-  }
-}
-
 
   return (
     <CreateAddressPageMainDiv>
@@ -90,10 +68,9 @@ const attemptCreateAddress = async (url, body,token, setOpen) => {
           .max(30, "Máximo 30 caracteres")
           .required('Campo obrigátorio'),
           state: Yup.string('Insira o nome do seu estado')
-          .min(3, "Mínimo 3 caracteres")
+          .min(2, "Mínimo 2 caracteres")
           .max(30, "Máximo 30 caracteres")
           .required('Campo obrigátorio'),
-
         })}
 
         onSubmit = {(values,actions) => {
@@ -107,18 +84,17 @@ const attemptCreateAddress = async (url, body,token, setOpen) => {
           }
          let token = window.sessionStorage.getItem('token')
        
-         let answer = attemptCreateAddress('address',body,token, setOpen); 
+         let answer = attemptCreateAddress('address',body,token, setOpen,setMessageError); 
          answer.then( (response) => {
            setUser(response.data.user);
+           window.sessionStorage.setItem("token", response.data.token)
            goToHome(navigate); 
            actions.setSubmitting(false)
            actions.resetForm()
-
          }).catch( (error) => {
           actions.setSubmitting(false)
           actions.resetForm()
-      })
-        }}
+      })}}
         >
           { (props) => {
             return(
@@ -260,18 +236,12 @@ const attemptCreateAddress = async (url, body,token, setOpen) => {
                                    
                                 }}
                                 >Salvar</Button>}
-
-
               </Form>
-            )
-          }}
-
+            )}}
         </Formik>
-
-
-
       </CreateAddressPageFormDiv>
       </CreateAddressPageContentDiv>
+
       <Snackbar
                 open={open}
                 autoHideDuration={6000}

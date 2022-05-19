@@ -14,22 +14,14 @@ export const EditAddressPageContentDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 align-items: center; 
-
-
 width: 95%; 
 margin: 0 auto; 
 margin-top: 28px; 
-
-
 
 p{
     font-family: 'Roboto', sans-serif;
 }
 
-h3{
-  font-size: 16px; 
-  margin-bottom: 20px;
-}
 `
 
 
@@ -39,13 +31,8 @@ flex-direction: column;
 font-family: 'Roboto', sans-serif; 
 width: 90%; 
 
-#passwordInput{
-    margin-top: 16px; 
-}
-
 Button{
     color: #5cb646;
-
 }
 
 .MuiSvgIcon-root {

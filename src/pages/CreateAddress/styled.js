@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Button, InputAdornment, TextField } from '@mui/material';
+import {TextField } from '@mui/material';
 
 export const CreateAddressPageMainDiv = styled.div`
 height: 100vh;  
@@ -13,13 +13,9 @@ export const CreateAddressPageContentDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 align-items: center; 
-
-
 width: 95%; 
 margin: 0 auto; 
 margin-top: 28px; 
-
-
 
 p{
     font-family: 'Roboto', sans-serif;
@@ -51,7 +47,6 @@ Button{
     color: #b8b8b8;
 }
 
-
   .MuiButtonBase-root {
   color: #000000;
   font-family: 'Roboto', sans-serif;
@@ -62,7 +57,6 @@ Button{
 .MuiOutlinedInput-root{
     font-family: 'Roboto', sans-serif; 
 }
-
 `
 
 export const GreyBorderTextField = styled(TextField)`
@@ -84,7 +78,6 @@ export const GreyBorderTextField = styled(TextField)`
 `
 
 export const LoadingDiv = styled.div`
-
 display: flex; 
 width: 85vw; 
 align-items: center; 
