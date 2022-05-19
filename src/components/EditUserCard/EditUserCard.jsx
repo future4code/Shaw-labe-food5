@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { EditUserCardMainDiv, EditUserNameDiv, EditUserEmailDiv, EditUserCpfDiv } from './styled'
 import editIcon from '../../assets/edit_icon.svg'
+import { useNavigate } from 'react-router-dom'
 
 const EditUserCard = (props) => {
-  //props.user = userinfo
-console.log(props.user)
+    const navigate = useNavigate(); 
+
   return (
       
-        <EditUserCardMainDiv>
+        <EditUserCardMainDiv >
             <EditUserNameDiv>
             <p>{props.user.name}</p>
-            <img alt='editIcon' src={editIcon}/>
+            <img alt='editIcon' src={editIcon} onClick={()=> {navigate('/profile/user')}}/>
             </EditUserNameDiv>
             
             <EditUserEmailDiv>

@@ -23,3 +23,22 @@ img{
     width: 90%
 }
 `
+
+export const PastOrdersDiv = styled.div`
+width: 89%; 
+margin: 0 auto; 
+display: flex; 
+flex-direction: column; 
+margin-top: 16px; 
+
+`
+
+export const TitleDiv = styled.div`
+height: 32px; 
+width: 100%; 
+display: flex; 
+align-items: center; 
+justify-items: flex-start; 
+border-bottom: solid 1px black; 
+font-size: 16px; 
+`
