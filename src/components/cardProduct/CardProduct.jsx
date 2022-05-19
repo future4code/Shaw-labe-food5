@@ -7,14 +7,20 @@ import { CardButton, CardContainer, CardImage, CardInfo, Description, Price, Pro
 
 const CardProduct = ({product, addButton, setProductId, removeButton}) => {
     const [checkCart, setCheckCart] = useState([])
+    const [restaurantId, setRestaurantId] = useState('')
     const { states, setters } = useContext(GlobalContext)
     const {cart} = states;
     const {setCart} = setters;
+
+    useEffect(()=>{
+        const checkId = window.localStorage.getItem('resId')
+        setRestaurantId(checkId)
+    },[])
     useEffect(()=>{
         const check = cart.filter((item)=>item.id===product.id)
         setCheckCart(check)
     },[cart])
-
+    
     const removeItem = (id) => {
         // remove do card
         const cartCopy = [...cart]
@@ -25,20 +31,20 @@ const CardProduct = ({product, addButton, setProductId, removeButton}) => {
         window.localStorage.setItem('cart', JSON.stringify(cartCopy))
         setCart(cartCopy)
 
+        
         // atualiza no array do restaurante
-        const restaurant = JSON.parse(window.localStorage.getItem('restaurant'))
+        const restaurant = JSON.parse(window.localStorage.getItem(restaurantId))
         const restaurantCopy = [...restaurant.restaurant.products]
 
         const product = restaurantCopy.filter((item) => {
             return item.id === id
         })
-
         const productCopy = { ...product[0], quantity: 0 }
 
         const indexR = restaurantCopy.findIndex((item) => item.id === id)
 
         restaurantCopy[indexR] = productCopy
-        window.localStorage.setItem('restaurant', JSON.stringify({
+        window.localStorage.setItem(restaurantId, JSON.stringify({
             ...restaurant,
             restaurant: {
                 ...restaurant.restaurant, products: restaurantCopy
@@ -58,7 +64,7 @@ const CardProduct = ({product, addButton, setProductId, removeButton}) => {
             <CardInfo>
                 <Product>{product.name}</Product>
                 <Description>{product.description}</Description>
-                <Price>R${product.price}</Price>
+                <Price>R${product.price.toFixed(2).replace('.',',')}</Price>
             </CardInfo>
             <CardButton checkCart ={checkCart}>
                 {product.quantity ? <Quantity>{product.quantity}</Quantity>:<div></div>}

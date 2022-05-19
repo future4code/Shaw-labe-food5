@@ -1,26 +1,154 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Address, AddressContainer, AddressLabel, EmptyCart, Title, PaymentContainer, PaymentTitle, CartContainer, SubTotal, SubTotalContainer, RightText, InfoContainer, ButtonCart, ButtonContainer, BoxLabel, CardsContainer } from './styled'
-import { FormControlLabel, Radio, RadioGroup, FormControl } from '@mui/material'
+import { Address, AddressContainer, AddressLabel, EmptyCart, Title, PaymentContainer, PaymentTitle, CartContainer, SubTotal, SubTotalContainer, RightText, InfoContainer, ButtonCart, ButtonContainer, BoxLabel, CardsContainer, RestaurantInfo, Name, Infos } from './styled'
+import { FormControlLabel, Radio, RadioGroup, FormControl, Snackbar, Alert } from '@mui/material'
 import CardProduct from '../../components/cardProduct/CardProduct'
 import { GlobalContext } from '../../global/GlobalContext'
+import NavigationBar from '../../components/NavigationBar/NavigationBar'
+import { Box } from '@mui/system'
+import axios from 'axios'
+import { BaseUrl } from '../../constants/api'
+import { goToHome } from '../../routes/cordinator'
+import { useNavigate } from 'react-router-dom'
+
+const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, setReset) => {
+  
+    const token = window.sessionStorage.getItem('token')
+    const headers = {
+        headers: {
+            auth: token
+        }
+    }
+
+    axios.post(BaseUrl + endpoint, body, headers)
+        .then((res) => {
+            console.log(res.data)
+            setCart([])
+            goToHome(navigate)
+            setReset(true)
+            window.localStorage.removeItem('resId')
+        })
+        .catch((err) => {
+            setError(err.response.data)
+            setOpen(true)
+        })
+}
+
 
 const CartPage = () => {
     const [paymentMethod, setPayment] = useState('');
-    const { states } = useContext(GlobalContext)
-    const {cart} = states;
+    const [choosenRestaurant, setChoosenRestaurant] = useState({});
+    const [restaurantId, setRestaurantId] = useState({});
+    const [reset, setReset] = useState(null);
+    const { states, setters } = useContext(GlobalContext)
+    const { cart, user } = states;
+    const { setCart } = setters;
     const [values, setValues] = useState(0)
+    const navigate = useNavigate()
+    
 
+    const [open, setOpen] = useState(false)
+    const [messageError, setMessageError] = useState('')
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
 
     const onChange = (event) => {
         setPayment(event.target.value)
     }
     useEffect(()=>{
+        const checkId = window.localStorage.getItem('resId')
+        setRestaurantId(checkId)
+    },[])
+
+    useEffect(() => {
+        const restaurant = JSON.parse(window.localStorage.getItem(restaurantId))
+        setChoosenRestaurant(restaurant)
+    }, [restaurantId])
+    
+
+    useEffect(() => {
         let total = 0;
-        cart.forEach((product)=>{
-            total = total + product.price * product.quantity
-            setValues(total)
+        if (cart.length > 0) {
+            cart.forEach((product) => {
+                total = total + product.price * product.quantity
+            })
+            const subTotal = total+choosenRestaurant?.restaurant?.shipping
+            setValues(subTotal.toFixed(2))
+        } else {
+            setValues(total.toFixed(2))
+        }
+    }, [cart, choosenRestaurant])
+
+    const placeOrder = (event) => {
+        event.preventDefault()
+        const products = cart.map((product) => {
+            return { id: product.id, quantity: product.quantity }
         })
-    },[cart])
+
+        const body = {
+            products: products,
+            paymentMethod: paymentMethod
+        }
+
+        postRequest(`restaurants/${choosenRestaurant.restaurant.id}/order`, body, setCart, setMessageError, setOpen, navigate, setReset)
+        
+        // atualiza no array do restaurante
+        if(reset){
+
+            cart.forEach((productOnCart) => {
+                const restaurant = JSON.parse(window.localStorage.getItem(restaurantId))
+                const restaurantCopy = [...restaurant.restaurant.products]
+                
+                const product = restaurantCopy.filter((item) => {
+                    return item.id === productOnCart.id
+                })
+                
+                const productCopy = { ...product[0], quantity: 0 }
+                
+                const indexR = restaurantCopy.findIndex((item) => item.id === productOnCart.id)
+                
+                restaurantCopy[indexR] = productCopy
+                window.localStorage.setItem(restaurantId, JSON.stringify({
+                    ...restaurant,
+                    restaurant: {
+                        ...restaurant.restaurant, products: restaurantCopy
+                    }
+                }))
+            })
+            window.localStorage.removeItem('cart')
+        }   
+    }
+
+    const resetLocal = () => {
+        cart.forEach((productOnCart) => {
+            const restaurant = JSON.parse(window.localStorage.getItem(restaurantId))
+            const restaurantCopy = [...restaurant.restaurant.products]
+            
+            const product = restaurantCopy.filter((item) => {
+                return item.id === productOnCart.id
+            })
+            
+            const productCopy = { ...product[0], quantity: 0 }
+            
+            const indexR = restaurantCopy.findIndex((item) => item.id === productOnCart.id)
+            
+            restaurantCopy[indexR] = productCopy
+            window.localStorage.setItem(restaurantId, JSON.stringify({
+                ...restaurant,
+                restaurant: {
+                    ...restaurant.restaurant, products: restaurantCopy
+                }
+            }))
+        })
+        window.localStorage.removeItem('cart')
+    }
+
+    useEffect(()=>{
+        reset && resetLocal()
+    }, [reset])
 
     return (
         <CartContainer>
@@ -35,36 +163,57 @@ const CartPage = () => {
                     Rua Alessandra Vieira, 42
                 </Address>
             </AddressContainer>
+
             {
                 cart.length > 0 ?
-                    <CardsContainer>
-                        {cart.map((product)=>{
+                    <>
+                        <RestaurantInfo>
+                            <Name>
+                                {choosenRestaurant?.restaurant?.name}
+                            </Name>
+                            <Infos>
+                                {choosenRestaurant?.restaurant?.address}
+                            </Infos>
+                            <Infos>
+                                {choosenRestaurant?.restaurant?.deliveryTime} min
+                            </Infos>
+                        </RestaurantInfo>
+                        <CardsContainer>
+                            {cart.map((product) => {
 
-                            return <CardProduct product = {product} key={product.id} />
-                        })}
-                    </CardsContainer>
+                                return <CardProduct 
+                                    product={product} 
+                                    key={product.id} 
+                                />
+                            })}
+                        </CardsContainer>
+                    </>
                     :
                     <EmptyCart>
                         Carrinho vazio
                     </EmptyCart>
+
             }
 
             <InfoContainer>
-                <div>
-                    <RightText>Frete R$0,00</RightText>
+                <RightText>Frete R${cart.length > 0 ? choosenRestaurant?.restaurant?.shipping : 0},00</RightText>
 
-                    <SubTotalContainer>
-                        <p>SUBTOTAL</p>
-                        <SubTotal>R${values}</SubTotal>
-                    </SubTotalContainer>
+                <SubTotalContainer>
+                    <p>SUBTOTAL</p>
+                    <SubTotal>R${values.replace('.',',')}</SubTotal>
+                </SubTotalContainer>
 
-                    <PaymentContainer>
+                <PaymentContainer>
 
-                        <PaymentTitle>
-                            Forma de pagamento
-                        </PaymentTitle>
+                    <PaymentTitle>
+                        Forma de pagamento
+                    </PaymentTitle>
 
-                        <FormControl>
+                    <Box component={'form'} onSubmit={placeOrder} sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1, width: '100%' }}>
+
+                        <FormControl
+                            sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, width: '100%' }}
+                        >
 
                             <RadioGroup
                                 aria-labelledby="demo-radio-buttons-group-label"
@@ -72,20 +221,37 @@ const CartPage = () => {
                                 onChange={onChange}
                                 value={paymentMethod}
                             >
-                                <FormControlLabel value={'cash'} control={<Radio />} label={<BoxLabel>Dinheiro</BoxLabel>} />
+                                <FormControlLabel value={'money'} control={<Radio required />} label={<BoxLabel>Dinheiro</BoxLabel>} />
 
-                                <FormControlLabel value={'creditCard'} control={<Radio />} label={<BoxLabel>Cartão de crédito</BoxLabel>} />
+                                <FormControlLabel value={'creditcard'} control={<Radio required />} label={<BoxLabel>Cartão de crédito</BoxLabel>} />
                             </RadioGroup>
-                        </FormControl>
-                    </PaymentContainer>
-                </div>
-            </InfoContainer>
-            <ButtonContainer>
-                <ButtonCart variant={cart.length > 0 ? 'primary' : 'secondary'} disabled={cart.length > 0 ? false : true}>
-                    Confirmar
-                </ButtonCart>
-            </ButtonContainer>
 
+                            <ButtonContainer>
+                                <ButtonCart
+                                    type='submit'
+                                    sx={{ width: '100%' }}
+                                    variant={cart.length > 0 ? 'primary' : 'secondary'} disabled={cart.length > 0 ? false : true}
+                                >
+                                    Confirmar
+                                </ButtonCart>
+                            </ButtonContainer>
+                        </FormControl>
+                    </Box>
+                </PaymentContainer>
+            </InfoContainer>
+            <NavigationBar />
+            <Snackbar
+                open={open}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'top' + 'center'}
+
+            >
+                <Alert onClose={handleClose} severity="warning" sx={{ width: '100%' }}>
+                    {messageError.message}
+                </Alert>
+            </Snackbar>
         </CartContainer>
     )
 }

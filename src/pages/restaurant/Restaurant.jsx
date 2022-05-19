@@ -3,7 +3,7 @@ import { GlobalContext } from '../../global/GlobalContext';
 import Header from '../../components/Header/Header'
 import { CardsContainer, Categories, CategoryTitle, InfoDiv, Infos, Logo, Name, PageContainer, RestaurantContainer, RestaurantInfo } from './styled';
 import CardProduct from '../../components/cardProduct/CardProduct';
-import { Box, Button, FormControl, MenuItem, Modal, Select, Typography } from '@mui/material';
+import { Alert, Box, Button, FormControl, MenuItem, Modal, Select, Snackbar, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { BaseUrl } from '../../constants/api'
@@ -32,17 +32,19 @@ const RestaurantPage = () => {
     const params = useParams()
 
     useEffect(() => {
-        const checkLocal = window.localStorage.getItem('restaurant')
+        const checkLocal = window.localStorage.getItem(params.id)
         checkLocal && setRestaurant(JSON.parse(checkLocal))
         !checkLocal && getRequest(`restaurants/${params.id}`, setRestaurant)
     }, [])
 
-    useEffect(()=>{
-        console.log('oi')
-        window.localStorage.removeItem('restaurant')
-    },[])
-
-    
+    const [openAlert, setOpenAlert] = useState(false)
+    const [messageError, setMessageError] = useState('')
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenAlert(false);
+    };
 
     const handleChange = (event) => {
         setQuantity(event.target.value);
@@ -88,13 +90,16 @@ const RestaurantPage = () => {
     const quantityOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     const addCart = () => {
+        const idCart = window.localStorage.getItem('resId')
+        if(!idCart || params.id === idCart){
+            
         const restaurantCopy = [...restaurant.restaurant.products]
 
         const product = restaurantCopy.filter((item) => {
             return item.id === productId
         })
 
-        const productCopy = { ...product[0], quantity: quantity }
+        const productCopy = { ...product[0], quantity: quantity, restaurant: restaurant.restaurant.name }
         setCart([...cart, productCopy])
 
         window.localStorage.setItem('cart', JSON.stringify([...cart, productCopy]))
@@ -110,12 +115,24 @@ const RestaurantPage = () => {
             }
         })
 
+        window.localStorage.setItem(restaurant.restaurant.id, JSON.stringify({
+            ...restaurant,
+            restaurant: {
+                ...restaurant.restaurant, products: restaurantCopy
+            }
+        }))
+
         handleClose()
         setQuantity(1)
+        window.localStorage.setItem('resId',params.id)
+        } else {
+            setMessageError('Conclua seu pedido atual ou remova do carrinho!')
+            setOpenAlert(true)
+        }
+
 
     }
     const remove = (id) => {
-        console.log('oi')
         const restaurantCopy = [...restaurant.restaurant.products]
 
         const product = restaurantCopy.filter((item) => {
@@ -135,7 +152,7 @@ const RestaurantPage = () => {
             }
         })  
 
-        window.localStorage.setItem('restaurant', JSON.stringify({
+        window.localStorage.setItem(restaurant.restaurant.id, JSON.stringify({
             ...restaurant,
             restaurant: {
                 ...restaurant.restaurant, products: restaurantCopy
@@ -218,6 +235,18 @@ const RestaurantPage = () => {
                     </Button>
                 </Box>
             </Modal>
+            <Snackbar
+                open={openAlert}
+                autoHideDuration={6000}
+                onClose={handleCloseAlert}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                key={'top' + 'center'}
+
+            >
+                <Alert onClose={handleCloseAlert} severity="warning" sx={{ width: '100%' }}>
+                    {messageError}
+                </Alert>
+            </Snackbar>
         </PageContainer>
     )
 }
