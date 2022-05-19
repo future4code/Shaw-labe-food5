@@ -1,7 +1,8 @@
 import styled from "styled-components"
-import {TextField } from '@mui/material';
+import { Button, InputAdornment, TextField } from '@mui/material';
 
-export const CreateAddressPageMainDiv = styled.div`
+
+export const EditUserPageMainDiv = styled.div`
 height: 100vh;  
 width: 100vw; 
 font-family: 'Roboto', sans-serif; 
@@ -9,13 +10,31 @@ font-size: 16px;
 letter-spacing: -0.39px;
 color: black; 
 `
-export const CreateAddressPageContentDiv = styled.div`
+
+export const EditUserPageLogoDiv = styled.div`
+display: flex; 
+flex-direction: column; 
+margin-top: 24px; 
+height: 58px; 
+width: 100%; 
+align-items: center; 
+justify-content: flex-end; 
+
+img{
+    max-width: 104px; 
+    max-height: 58px; 
+}
+
+`
+
+export const EditUserPageContentDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 align-items: center; 
-width: 95%; 
-margin: 0 auto; 
 margin-top: 28px; 
+
+
+
 
 p{
     font-family: 'Roboto', sans-serif;
@@ -28,7 +47,7 @@ h3{
 `
 
 
-export const CreateAddressPageFormDiv = styled.div`
+export const EditUserPageFormDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 font-family: 'Roboto', sans-serif; 
@@ -47,6 +66,7 @@ Button{
     color: #b8b8b8;
 }
 
+
   .MuiButtonBase-root {
   color: #000000;
   font-family: 'Roboto', sans-serif;
@@ -57,6 +77,7 @@ Button{
 .MuiOutlinedInput-root{
     font-family: 'Roboto', sans-serif; 
 }
+
 `
 
 export const GreyBorderTextField = styled(TextField)`
@@ -75,19 +96,16 @@ export const GreyBorderTextField = styled(TextField)`
     font-family: 'Roboto', sans-serif;
   }
  
-`
+`;
 
-export const LoadingDiv = styled.div`
-display: flex; 
-width: 85vw; 
-align-items: center; 
-justify-content: center; 
-margin-top: 16px; 
 
-img 
-{
-  max-width: 50px; 
-  max-height: 50px;
-} 
+export const LoadingScreenDiv = styled.div`
 
-`
+height: 100vh; 
+width: 100vw; 
+
+img{
+  height: 100vh; 
+width: 100vw; 
+}
+`  
