@@ -1,15 +1,16 @@
 import styled from "styled-components"
-import {TextField } from '@mui/material';
+import { Button, InputAdornment, TextField } from '@mui/material';
 
-export const CreateAddressPageMainDiv = styled.div`
+export const EditAddressPageMainDiv = styled.div`
 height: 100vh;  
 width: 100vw; 
 font-family: 'Roboto', sans-serif; 
 font-size: 16px; 
 letter-spacing: -0.39px;
 color: black; 
+font-weight: 500;
 `
-export const CreateAddressPageContentDiv = styled.div`
+export const EditAddressPageContentDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 align-items: center; 
@@ -21,31 +22,23 @@ p{
     font-family: 'Roboto', sans-serif;
 }
 
-h3{
-  font-size: 16px; 
-  margin-bottom: 20px;
-}
 `
 
 
-export const CreateAddressPageFormDiv = styled.div`
+export const EditAddressPageFormDiv = styled.div`
 display: flex; 
 flex-direction: column; 
 font-family: 'Roboto', sans-serif; 
 width: 90%; 
 
-#passwordInput{
-    margin-top: 16px; 
-}
-
 Button{
     color: #5cb646;
-
 }
 
 .MuiSvgIcon-root {
     color: #b8b8b8;
 }
+
 
   .MuiButtonBase-root {
   color: #000000;
@@ -57,6 +50,7 @@ Button{
 .MuiOutlinedInput-root{
     font-family: 'Roboto', sans-serif; 
 }
+
 `
 
 export const GreyBorderTextField = styled(TextField)`
@@ -78,6 +72,7 @@ export const GreyBorderTextField = styled(TextField)`
 `
 
 export const LoadingDiv = styled.div`
+
 display: flex; 
 width: 85vw; 
 align-items: center; 
@@ -89,5 +84,17 @@ img
   max-width: 50px; 
   max-height: 50px;
 } 
+
+`
+
+export const LoadingScreenDiv = styled.div`
+
+height: 100vh; 
+width: 100vw; 
+
+img{
+  height: 100vh; 
+width: 100vw; 
+}
 
 `
