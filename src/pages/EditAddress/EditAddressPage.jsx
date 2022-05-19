@@ -7,21 +7,22 @@ import { Field, Form, Formik } from 'formik';
 import { BaseUrl } from '../../constants/api';
 import loading from '../../assets/myLoading.svg';
 import {GlobalContext} from '../../global/GlobalContext'
-import { CreateAddressPageContentDiv, CreateAddressPageFormDiv, CreateAddressPageMainDiv, GreyBorderTextField, LoadingDiv } from './styled';
-import {useProtectedPage} from '../../hooks/useProtectedPage'
+import { EditAddressPageContentDiv, EditAddressPageFormDiv, EditAddressPageMainDiv, GreyBorderTextField, LoadingDiv, LoadingScreenDiv } from './styled';
 import axios from 'axios';
 import { goToHome } from '../../routes/cordinator';
+import splash from '../../assets/splash.png'
 
-const CreateAddressPage = (props) => {
 
+
+
+const  EditAddressPage = () => {
   const navigate = useNavigate(); 
   const {states, setters} = useContext(GlobalContext); 
   const {user} = states; 
   const {setUser} = setters; 
-
-  
   const [open, setOpen] = useState(false)
   const [messageError, setMessageError] = useState('')
+  const [userAddress, setUserAddress] = useState({}); 
   const handleClose = (event, reason) => {
       if (reason === 'clickaway') {
           return;
@@ -30,44 +31,66 @@ const CreateAddressPage = (props) => {
   };
 
 
-//useProtectedPage()
+  useEffect( ()=>{
+    let token = window.sessionStorage.getItem('token'); 
+    getUserAddress(`profile/address`,token)
+  },[])
 
-const attemptCreateAddress = async (url, body,token, setOpen) => {
 
-  try 
-  {
-      const response = await axios.put(`${BaseUrl}${url}`, body, {
+  const getUserAddress = async (url, token, setOpen) => {
+    try {
+      const response = await axios.get(`${BaseUrl}${url}`, {
         headers: { 
             'auth': token
           }
         })
-      return response; 
+        setUserAddress(response.data.address)
+
+    }
+    catch(error) {
+      setOpen(true)
+      setMessageError(error.response.data.message)
+    }
   }
-  catch (error) {
-    setOpen(true)
-            setMessageError(error.response.data.message)
+
+  const attemptEditAddress = async (url, body,token, setOpen) => {
+
+    try 
+    {
+        const response = await axios.put(`${BaseUrl}${url}`, body, {
+          headers: { 
+              'auth': token
+            }
+          })
+        return response; 
+    }
+    catch (error) {
+      setOpen(true)
+      setMessageError(error.response.data.message)
+    }
   }
-}
 
 
-  return (
-    <CreateAddressPageMainDiv>
-      <Header/>
 
-      <CreateAddressPageContentDiv>
-        <h3>Meu endereço</h3>
+//ternario para n mostrar tela ate tela estiver carregado
+  return ( userAddress && userAddress.city ?
+    (<EditAddressPageMainDiv>
+      <Header title="Endereço"/>
+
+      <EditAddressPageContentDiv>
+        
       
 
-      <CreateAddressPageFormDiv>
+      <EditAddressPageFormDiv>
 
         <Formik
         initialValues={{
-          street: "",
-          number: '',
-          complement: "", 
-          neighbourhood: "",
-          city: "", 
-          state: ""
+          street: userAddress.street,
+          number: userAddress.number,
+          complement: userAddress.complement, 
+          neighbourhood: userAddress.neighbourhood,
+          city: userAddress.city, 
+          state: userAddress.state,
         }}
 
         validationSchema = {Yup.object({
@@ -107,12 +130,13 @@ const attemptCreateAddress = async (url, body,token, setOpen) => {
           }
          let token = window.sessionStorage.getItem('token')
        
-         let answer = attemptCreateAddress('address',body,token, setOpen); 
+         let answer = attemptEditAddress('address',body,token, setOpen); 
          answer.then( (response) => {
+          
            setUser(response.data.user);
-           goToHome(navigate); 
+          
            actions.setSubmitting(false)
-           actions.resetForm()
+          
 
          }).catch( (error) => {
           actions.setSubmitting(false)
@@ -268,10 +292,8 @@ const attemptCreateAddress = async (url, body,token, setOpen) => {
 
         </Formik>
 
-
-
-      </CreateAddressPageFormDiv>
-      </CreateAddressPageContentDiv>
+      </EditAddressPageFormDiv>
+      </EditAddressPageContentDiv>
       <Snackbar
                 open={open}
                 autoHideDuration={6000}
@@ -284,8 +306,10 @@ const attemptCreateAddress = async (url, body,token, setOpen) => {
                 </Alert>
             </Snackbar> 
 
-      </CreateAddressPageMainDiv>
+      </EditAddressPageMainDiv>) : (<LoadingScreenDiv>
+        <img alt='loading screen' src={splash} /> 
+    </LoadingScreenDiv>)
   )
 }
 
-export default CreateAddressPage
+export default EditAddressPage
