@@ -1,19 +1,26 @@
-import React, {useContext, useState} from 'react'
-
-export const GlobalContext = React.createContext();
+import { GlobalContext } from './GlobalContext'
+import React, {useContext, useEffect, useState} from 'react'
 
 export const GlobalStateProvider = (props) => {
 
     //objeto user
-    const [filter, setFilter] = useState("")
+    const [user, setUser] = useState({});
+
+    // produtos no carrinho
+    const [cart, setCart] = useState([]);
+
+    useEffect(()=>{
+        const cartLocal = window.localStorage.getItem('cart')
+        cartLocal && setCart(JSON.parse(cartLocal))
+    },[])
     
+    let states = {user, cart}; 
+    let setters = {setUser, setCart}
+    const [filter, setFilter] = useState("")
 
-
-    // let states = {user}; 
-    // let setters = {setUser}
 
     return (
-        <GlobalContext.Provider value = {{filter, setFilter}}>
+        <GlobalContext.Provider value = {{filter, setFilter, states, setters}}>
             {props.children}
         </GlobalContext.Provider>
     )
