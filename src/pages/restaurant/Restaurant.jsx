@@ -4,11 +4,14 @@ import Header from '../../components/Header/Header'
 import { CardsContainer, Categories, CategoryTitle, InfoDiv, Infos, Logo, Name, PageContainer, RestaurantContainer, RestaurantInfo } from './styled';
 import CardProduct from '../../components/cardProduct/CardProduct';
 import { Alert, Box, Button, FormControl, MenuItem, Modal, Select, Snackbar, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { getRequest } from '../../services/requests';
+import { useParams } from 'react-router-dom'
+import { getRequest } from '../../services/requests'
+import { useProtectedPage } from '../../hooks/useProtectedPage';
 
 const RestaurantPage = () => {
 
+    useProtectedPage()
+    
     const [quantity, setQuantity] = useState(1)
     const [categories, setCategories] = useState([])
     const [restaurant, setRestaurant] = useState({})

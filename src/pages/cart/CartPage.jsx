@@ -7,10 +7,13 @@ import NavigationBar from '../../components/NavigationBar/NavigationBar'
 import { Box } from '@mui/system'
 import { useNavigate } from 'react-router-dom'
 import { postRequest } from '../../services/requests'
-import { SettingsSuggestRounded } from '@mui/icons-material'
+import { useProtectedPage } from '../../hooks/useProtectedPage'
 
 
 const CartPage = () => {
+
+    useProtectedPage()
+
     const [paymentMethod, setPayment] = useState('');
     const [choosenRestaurant, setChoosenRestaurant] = useState({});
     const [restaurantId, setRestaurantId] = useState({});
