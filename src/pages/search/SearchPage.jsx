@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MainContainer, SearchContainer, Headers, Icon, Back, Main } from "./styled";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Link } from "react-router-dom";
-import CardImage from "../../components/card/Card"
+import {CardImageF} from "../../components/card/Card"
 import {useFilter} from "../../global/GlobalState"
 
 const SearchPage = () => {
@@ -55,7 +55,7 @@ const SearchPage = () => {
         <p className="central">Busque por nome de restaurante</p>
         )}
         {active &&(
-        <CardImage/>
+        <CardImageF/>
         )}
       </Main>
     </MainContainer>

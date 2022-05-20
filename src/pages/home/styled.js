@@ -2,23 +2,32 @@ import styled from "styled-components"
 import AppBar from "@mui/material/AppBar";
 
 export const Section = styled.div`
-  position: relative;
-  top: 24vh;
+  margin-top: 2%;
   height: 80vh;
   overflow: hidden;
   overflow-y: scroll;
+  padding-bottom: 6vh;
 `;
 
-export const Future = styled.h4`
-  letter-spacing: -0.39px;
-  size: 16px;
-  width: 175px;
+export const Future = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 44px;
-  margin: 20px 92px 0 93px;
-  padding: 13px 50.5px 12px;
-  font-weight: 400;
+  width: 100%;
+
+  p{
+    font-size: 1em;
+    font-weight: 400;
+    letter-spacing: -0.39px;
+  }
 `;
 export const AppaBars = styled(AppBar)`
+display: flex;
+justify-content: center;
+align-items: center;
 box-shadow: none;
-
+height: 18vh;
+width: 100%;
 `;

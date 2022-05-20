@@ -2,10 +2,12 @@ import  React,{useState,useEffect} from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import axios from "axios";
+import { useFilter } from "../../global/GlobalState";
 
 const ScroolableTabs = () => {
   const [value, setValue] = useState(0);
   const [rest, setRest] = useState([]);
+  const {filter, setFilter} = useFilter()
 
   const getRest = () => {
     const token =
@@ -31,12 +33,7 @@ const ScroolableTabs = () => {
     setValue(newValue);
   };
   const filterResult = (catItem) => {
-    const result = rest.filter((curData) =>{
-      return curData.category === catItem 
-    })
-    setRest(result)
-   
-
+    setFilter(catItem)
   }
   useEffect(() => {
     getRest();
@@ -50,15 +47,16 @@ const ScroolableTabs = () => {
           variant="scrollable"
           scrollButtons="auto"          
         >
-          <Tab  onClick={()=>filterResult("Árabe")} label="Árabe" />
-          <Tab  onClick={()=>filterResult("Asiática")} label="Asiática" />
-          <Tab  onClick={()=>filterResult("Hamburguer")} label="Hamburguer" />
-          <Tab  onClick={()=>filterResult("Italiana")} label="Italiana" />
-          <Tab  onClick={()=>filterResult("Sorvetes")} label="Sorvetes" />
-          <Tab  onClick={()=>filterResult("Carnes")} label="Carnes" />
-          <Tab  onClick={()=>filterResult("Baiana")} label="Baiana" />
-          <Tab  onClick={()=>filterResult("Petiscos")} label="Petiscos" />
-          <Tab  onClick={()=>filterResult("Mexicana")} label="Mexicangit " />         
+          <Tab  onClick={()=>filterResult("")} label="Todos"/>
+          <Tab  onClick={()=>filterResult("Árabe")} label="Árabe"/>
+          <Tab  onClick={()=>filterResult("Asiática")} label="Asiática"/>
+          <Tab  onClick={()=>filterResult("Hamburguer")} label="Hamburguer"/>
+          <Tab  onClick={()=>filterResult("Italiana")} label="Italiana"/>
+          <Tab  onClick={()=>filterResult("Sorvetes")} label="Sorvetes"/>
+          <Tab  onClick={()=>filterResult("Carnes")} label="Carnes"/>
+          <Tab  onClick={()=>filterResult("Baiana")} label="Baiana"/>
+          <Tab  onClick={()=>filterResult("Petiscos")} label="Petiscos"/>
+          <Tab  onClick={()=>filterResult("Mexicana")} label="Mexicana "/>         
         </Tabs>
       
     </>
