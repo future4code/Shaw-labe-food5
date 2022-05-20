@@ -5,22 +5,7 @@ import { CardsContainer, Categories, CategoryTitle, InfoDiv, Infos, Logo, Name, 
 import CardProduct from '../../components/cardProduct/CardProduct';
 import { Alert, Box, Button, FormControl, MenuItem, Modal, Select, Snackbar, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { BaseUrl } from '../../constants/api'
-
-
-const getRequest = (endpoint, setData) => {
-    const token = window.sessionStorage.getItem('token')
-    const headers = {
-        headers: {
-            auth: token
-        }
-    }
-    axios.get(`${BaseUrl}${endpoint}`, headers)
-        .then((res) => {
-            setData(res.data)
-        })
-}
+import { getRequest } from '../../services/requests';
 
 const RestaurantPage = () => {
 
@@ -64,11 +49,6 @@ const RestaurantPage = () => {
             return allCategories.indexOf(cur) === i
         })
         setCategories(categories)
-    }, [restaurant])
-
-
-    useEffect(()=>{
-        window.localStorage.setItem('restaurant', JSON.stringify(restaurant))
     }, [restaurant])
 
 
@@ -207,8 +187,6 @@ const RestaurantPage = () => {
             <Modal
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
                     <Typography variant="h6" component="h2" sx={{ fontSize: '16px', letterSpacing: '-0.39px', textAlign: 'center' }}>
@@ -241,7 +219,6 @@ const RestaurantPage = () => {
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 key={'top' + 'center'}
-
             >
                 <Alert onClose={handleCloseAlert} severity="warning" sx={{ width: '100%' }}>
                     {messageError}

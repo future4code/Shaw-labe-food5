@@ -1,4 +1,3 @@
-
 import { Button } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { GlobalContext } from "../../global/GlobalContext"

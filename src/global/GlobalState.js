@@ -21,7 +21,6 @@ export const GlobalStateProvider = (props) => {
     let states = {user, cart, order}; 
     let setters = {setUser, setCart, setOrder}
     const [filter, setFilter] = useState("")
-    console.log(order)
 
     return (
         <GlobalContext.Provider value = {{filter, setFilter, states, setters}}>
