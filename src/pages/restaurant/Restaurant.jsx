@@ -4,26 +4,14 @@ import Header from '../../components/Header/Header'
 import { CardsContainer, Categories, CategoryTitle, InfoDiv, Infos, Logo, Name, PageContainer, RestaurantContainer, RestaurantInfo } from './styled';
 import CardProduct from '../../components/cardProduct/CardProduct';
 import { Alert, Box, Button, FormControl, MenuItem, Modal, Select, Snackbar, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { BaseUrl } from '../../constants/api'
-
-
-const getRequest = (endpoint, setData) => {
-    const token = window.sessionStorage.getItem('token')
-    const headers = {
-        headers: {
-            auth: token
-        }
-    }
-    axios.get(`${BaseUrl}${endpoint}`, headers)
-        .then((res) => {
-            setData(res.data)
-        })
-}
+import { useParams } from 'react-router-dom'
+import { getRequest } from '../../services/requests'
+import { useProtectedPage } from '../../hooks/useProtectedPage';
 
 const RestaurantPage = () => {
 
+    useProtectedPage()
+    
     const [quantity, setQuantity] = useState(1)
     const [categories, setCategories] = useState([])
     const [restaurant, setRestaurant] = useState({})
@@ -64,11 +52,6 @@ const RestaurantPage = () => {
             return allCategories.indexOf(cur) === i
         })
         setCategories(categories)
-    }, [restaurant])
-
-
-    useEffect(()=>{
-        window.localStorage.setItem('restaurant', JSON.stringify(restaurant))
     }, [restaurant])
 
 
@@ -133,7 +116,7 @@ const RestaurantPage = () => {
 
     }
     const remove = (id) => {
-        const restaurantCopy = [...restaurant.restaurant.products]
+        const restaurantCopy = [...restaurant?.restaurant.products]
 
         const product = restaurantCopy.filter((item) => {
             return item.id === id
@@ -152,7 +135,7 @@ const RestaurantPage = () => {
             }
         })  
 
-        window.localStorage.setItem(restaurant.restaurant.id, JSON.stringify({
+        window.localStorage.setItem(restaurant?.restaurant.id, JSON.stringify({
             ...restaurant,
             restaurant: {
                 ...restaurant.restaurant, products: restaurantCopy
@@ -207,8 +190,6 @@ const RestaurantPage = () => {
             <Modal
                 open={open}
                 onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
                     <Typography variant="h6" component="h2" sx={{ fontSize: '16px', letterSpacing: '-0.39px', textAlign: 'center' }}>
@@ -241,7 +222,6 @@ const RestaurantPage = () => {
                 onClose={handleCloseAlert}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 key={'top' + 'center'}
-
             >
                 <Alert onClose={handleCloseAlert} severity="warning" sx={{ width: '100%' }}>
                     {messageError}

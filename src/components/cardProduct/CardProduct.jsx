@@ -1,4 +1,3 @@
-
 import { Button } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { GlobalContext } from "../../global/GlobalContext"
@@ -7,21 +6,18 @@ import { CardButton, CardContainer, CardImage, CardInfo, Description, Price, Pro
 
 const CardProduct = ({product, addButton, setProductId, removeButton}) => {
     const [checkCart, setCheckCart] = useState([])
-    const [restaurantId, setRestaurantId] = useState('')
     const { states, setters } = useContext(GlobalContext)
     const {cart} = states;
     const {setCart} = setters;
 
-    useEffect(()=>{
-        const checkId = window.localStorage.getItem('resId')
-        setRestaurantId(checkId)
-    },[])
+
     useEffect(()=>{
         const check = cart.filter((item)=>item.id===product.id)
         setCheckCart(check)
     },[cart])
     
     const removeItem = (id) => {
+       const restaurantId = window.localStorage.getItem('resId')
         // remove do card
         const cartCopy = [...cart]
         const index = cartCopy.findIndex((item)=>{
@@ -78,5 +74,6 @@ const CardProduct = ({product, addButton, setProductId, removeButton}) => {
         </CardContainer>
     )
 }
+
 
 export default CardProduct

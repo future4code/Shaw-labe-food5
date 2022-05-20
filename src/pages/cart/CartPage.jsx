@@ -5,47 +5,23 @@ import CardProduct from '../../components/cardProduct/CardProduct'
 import { GlobalContext } from '../../global/GlobalContext'
 import NavigationBar from '../../components/NavigationBar/NavigationBar'
 import { Box } from '@mui/system'
-import axios from 'axios'
-import { BaseUrl } from '../../constants/api'
-import { goToHome } from '../../routes/cordinator'
 import { useNavigate } from 'react-router-dom'
-
-const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, resetLocal, setOrder) => {
-  
-    const token = window.sessionStorage.getItem('token')
-    const headers = {
-        headers: {
-            auth: token
-        }
-    }
-
-    axios.post(BaseUrl + endpoint, body, headers)
-        .then((res) => {
-            setCart([])
-            goToHome(navigate)
-            resetLocal()
-            console.log(res.data)
-            setOrder(res.data)
-            window.localStorage.removeItem('resId')
-            window.localStorage.removeItem('cart')
-        })
-        .catch((err) => {
-            setError(err.response.data)
-            setOpen(true)
-        })
-}
+import { postRequest } from '../../services/requests'
+import { useProtectedPage } from '../../hooks/useProtectedPage'
 
 
 const CartPage = () => {
+
+    useProtectedPage()
+
     const [paymentMethod, setPayment] = useState('');
     const [choosenRestaurant, setChoosenRestaurant] = useState({});
     const [restaurantId, setRestaurantId] = useState({});
     const { states, setters } = useContext(GlobalContext)
     const { cart, user } = states;
-    const { setCart, setOrder } = setters;
+    const { setCart, setOrder, setUser } = setters;
     const [values, setValues] = useState(0)
     const navigate = useNavigate()
-    
 
     const [open, setOpen] = useState(false)
     const [messageError, setMessageError] = useState('')
@@ -61,6 +37,8 @@ const CartPage = () => {
     }
     useEffect(()=>{
         const checkId = window.localStorage.getItem('resId')
+        const getUser = window.sessionStorage.getItem('user')
+        setUser(JSON.parse(getUser))
         setRestaurantId(checkId)
     },[])
 
@@ -95,32 +73,6 @@ const CartPage = () => {
         }
 
         postRequest(`restaurants/${choosenRestaurant.restaurant.id}/order`, body, setCart, setMessageError, setOpen, navigate, resetLocal, setOrder)
-        
-        // atualiza no array do restaurante
-        // if(reset){
-
-        //     cart.forEach((productOnCart) => {
-        //         const restaurant = JSON.parse(window.localStorage.getItem(restaurantId))
-        //         const restaurantCopy = [...restaurant.restaurant.products]
-                
-        //         const product = restaurantCopy.filter((item) => {
-        //             return item.id === productOnCart.id
-        //         })
-                
-        //         const productCopy = { ...product[0], quantity: 0 }
-                
-        //         const indexR = restaurantCopy.findIndex((item) => item.id === productOnCart.id)
-                
-        //         restaurantCopy[indexR] = productCopy
-        //         window.localStorage.setItem(restaurantId, JSON.stringify({
-        //             ...restaurant,
-        //             restaurant: {
-        //                 ...restaurant.restaurant, products: restaurantCopy
-        //             }
-        //         }))
-        //     })
-            
-        // }   
     }
 
     const resetLocal = () => {
@@ -157,7 +109,7 @@ const CartPage = () => {
                     Endereço de entrega
                 </AddressLabel>
                 <Address>
-                    Rua Alessandra Vieira, 42
+                    {user && user.address}
                 </Address>
             </AddressContainer>
 
@@ -236,7 +188,9 @@ const CartPage = () => {
                     </Box>
                 </PaymentContainer>
             </InfoContainer>
-            <NavigationBar />
+            <NavigationBar 
+                sourcePage='cart'
+            />
             <Snackbar
                 open={open}
                 autoHideDuration={6000}

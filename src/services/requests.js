@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BaseUrl } from '../constants/api';
+import { goToHome } from "../routes/cordinator";
 
 
 export const attemptLogin= async (url, body, setOpen,setMessageError) => {
@@ -108,3 +109,40 @@ export const attemptCreateAddress = async (url, body,token, setOpen, setMessageE
       setMessageError(error.response.data.message)
     }
   }
+
+  export const getRequest = (endpoint, setData) => {
+    const token = window.sessionStorage.getItem('token')
+    const headers = {
+        headers: {
+            auth: token
+        }
+    }
+    axios.get(`${BaseUrl}${endpoint}`, headers)
+        .then((res) => {
+            setData(res.data)
+        })
+}
+
+export const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, resetLocal, setOrder) => {
+  const token = window.sessionStorage.getItem('token')
+  const headers = {
+      headers: {
+          auth: token
+      }
+  }
+
+  axios.post(BaseUrl + endpoint, body, headers)
+      .then((res) => {
+          setCart([])
+          goToHome(navigate)
+          resetLocal()
+          console.log(res.data)
+          setOrder(res.data)
+          window.localStorage.removeItem('resId')
+          window.localStorage.removeItem('cart')
+      })
+      .catch((err) => {
+          setError(err.response.data)
+          setOpen(true)
+      })
+}
