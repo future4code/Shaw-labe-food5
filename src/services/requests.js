@@ -136,7 +136,6 @@ export const postRequest = (endpoint, body, setCart, setError, setOpen, navigate
           setCart([])
           goToHome(navigate)
           resetLocal()
-          console.log(res.data)
           setOrder(res.data)
           window.localStorage.removeItem('resId')
           window.localStorage.removeItem('cart')

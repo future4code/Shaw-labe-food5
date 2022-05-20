@@ -33,7 +33,7 @@ getUserInfo('profile',token,setOpen,setMessageError, setUserInfo)
                     <p>Histórico de pedidos</p>
                 </TitleDiv>
             </PastOrdersDiv>
-            <NavigationBar/>
+            <NavigationBar sourcePage = 'profile'/>
         </ProfilePageMainDiv>
     )
 }

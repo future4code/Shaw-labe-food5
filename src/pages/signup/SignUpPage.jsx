@@ -105,7 +105,6 @@ const SignUpPage = () => {
                         actions.setSubmitting(false)
                         actions.resetForm()
                     }).catch( (error) => {
-                        console.log("erro dentro do signup form", error);
                         actions.setSubmitting(false)
                         actions.resetForm()
                     })  

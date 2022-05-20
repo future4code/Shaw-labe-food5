@@ -71,6 +71,7 @@ const CardMeal = styled.div`
 const Delivery = styled.div`
   display: flex;
 `
+
 const CardImage = () => {
   //useProtectedPage()
   const [rest, setRest] = useState([]);
@@ -94,18 +95,18 @@ const CardImage = () => {
         setRest(res.data.restaurants);
       })
       .catch((err) => {
-        console.log(err.response);
+       
       });
   };
 
   useEffect(() => {
     getRest();
   }, []);
-  console.log(rest)
+  
   const filteredList = filter ? rest.filter(({
     name
   }) => name.toUpperCase().includes(filter.toUpperCase())) : rest;
-  console.log(filteredList)
+  
 
   const listRest = filteredList.map((res) => {
     return (
