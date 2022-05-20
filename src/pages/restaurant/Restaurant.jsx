@@ -133,7 +133,7 @@ const RestaurantPage = () => {
 
     }
     const remove = (id) => {
-        const restaurantCopy = [...restaurant.restaurant.products]
+        const restaurantCopy = [...restaurant?.restaurant.products]
 
         const product = restaurantCopy.filter((item) => {
             return item.id === id
@@ -152,7 +152,7 @@ const RestaurantPage = () => {
             }
         })  
 
-        window.localStorage.setItem(restaurant.restaurant.id, JSON.stringify({
+        window.localStorage.setItem(restaurant?.restaurant.id, JSON.stringify({
             ...restaurant,
             restaurant: {
                 ...restaurant.restaurant, products: restaurantCopy
