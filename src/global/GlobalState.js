@@ -1,7 +1,7 @@
 import { GlobalContext } from './GlobalContext'
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 
-export default function GlobalState(props) {
+export const GlobalStateProvider = (props) => {
 
     //objeto user
     const [user, setUser] = useState({});
@@ -14,16 +14,18 @@ export default function GlobalState(props) {
         cartLocal && setCart(JSON.parse(cartLocal))
     },[])
     
-
-
     let states = {user, cart}; 
     let setters = {setUser, setCart}
+    const [filter, setFilter] = useState("")
+
 
     return (
-        <GlobalContext.Provider value = { {states,setters}}>
+        <GlobalContext.Provider value = {{filter, setFilter, states, setters}}>
             {props.children}
         </GlobalContext.Provider>
     )
 }
+
+export const useFilter = () => useContext(GlobalContext)
 
 
