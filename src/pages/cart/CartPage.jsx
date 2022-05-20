@@ -188,7 +188,9 @@ const CartPage = () => {
                     </Box>
                 </PaymentContainer>
             </InfoContainer>
-            <NavigationBar />
+            <NavigationBar 
+                sourcePage='cart'
+            />
             <Snackbar
                 open={open}
                 autoHideDuration={6000}
