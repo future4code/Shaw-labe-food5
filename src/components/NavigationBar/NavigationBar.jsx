@@ -20,22 +20,22 @@ const  ButtonIcons = styled(BottomNavigationAction)`
   }
   
 `
-const NavigationBar = () => {
+const NavigationBar = (props) => {
   const navigate = useNavigate();
   return (
     <>
       <Navbar>
         <BottomNavigationAction
           onClick={() => goToHome(navigate)}
-          icon={<HomeOutlinedIcon color="primary"/>}
+          icon={<HomeOutlinedIcon color={props.sourcePage? '': "primary"}/>}
         />
-        <ButtonIcons
+        <BottomNavigationAction
           onClick={() => goToCart(navigate)}
-          icon={<ShoppingCartOutlinedIcon />}
+          icon={<ShoppingCartOutlinedIcon color={props.sourcePage === 'cart' ? "primary": ''}/>}
         />
-        <ButtonIcons
+        <BottomNavigationAction
           onClick={() => goToProfile(navigate)}
-          icon={<AccountBoxOutlinedIcon  />}
+          icon={<AccountBoxOutlinedIcon color={props.sourcePage === 'profile' ? "primary": ''} />}
         />
       </Navbar>
     </>

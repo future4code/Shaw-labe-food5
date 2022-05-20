@@ -136,7 +136,6 @@ export const postRequest = (endpoint, body, setCart, setError, setOpen, navigate
           setCart([])
           goToHome(navigate)
           resetLocal()
-          console.log(res.data)
           setOrder(res.data)
           window.localStorage.removeItem('resId')
           window.localStorage.removeItem('cart')
@@ -145,4 +144,23 @@ export const postRequest = (endpoint, body, setCart, setError, setOpen, navigate
           setError(err.response.data)
           setOpen(true)
       })
+}
+
+export const getOrdersHistory = async (url, token, setOpen, setMessageError, setOrderHistory) => 
+{
+  try {
+    const response = await axios.get(`${BaseUrl}${url}`, {
+      headers: { 
+          'auth': token
+        }
+      })
+
+  
+      setOrderHistory(response.data.orders)
+
+  }
+  catch(error) {
+    setOpen(true)
+    setMessageError(error.response.data.message)
+  }
 }

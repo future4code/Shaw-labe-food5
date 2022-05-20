@@ -7,6 +7,7 @@ import { Future,Section,AppaBars } from "./styled";
 
 
 const HomePage = () => {
+ 
   return (
     <>
       <AppaBars sx={{ backgroundColor: "#FFFFFF" }} align="center">
