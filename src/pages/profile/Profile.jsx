@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from 'react'
 import Header from '../../components/Header/Header'
-import { ProfilePageMainDiv,LoadingDiv, PastOrdersDiv, TitleDiv } from './styled'
+import { ProfilePageMainDiv,LoadingDiv, PastOrdersDiv, TitleDiv, EmptyMessageDiv, CardsDiv } from './styled'
 import NavigationBar from '../../components/NavigationBar/NavigationBar';
-import { getUserInfo } from '../../services/requests';
+import { getOrdersHistory, getUserInfo } from '../../services/requests';
 import EditUserCard from '../../components/EditUserCard/EditUserCard';
 import loading from '../../assets/myLoading.svg';
 import EditAddressCard from '../../components/EditAddressCard/EditAddressCard';
+import OrderHistoryCard from '../../components/OrderHistoryCard/OrderHistoryCard';
 
 const ProfilePage = () => {
 
     const [open, setOpen] = useState(''); 
     const [messageError, setMessageError] = useState(''); 
     const [userInfo, setUserInfo] = useState({}); 
+    const [orderHistory, setOrderHistory] = useState({})
     
 
 
 useEffect(()=>{
 let token = window.sessionStorage.getItem('token'); 
 
-getUserInfo('profile',token,setOpen,setMessageError, setUserInfo)
+getUserInfo('profile',token,setOpen,setMessageError, setUserInfo);
+getOrdersHistory('orders/history',token,setOpen,setMessageError, setOrderHistory)
 
 },[])
 
+let pastOrders = orderHistory && orderHistory.length >0 && orderHistory.map( (order) => {
+    return (<OrderHistoryCard order={order} key={order.createdAt}/>)
+})
 
     return (
         <ProfilePageMainDiv>
@@ -32,6 +38,11 @@ getUserInfo('profile',token,setOpen,setMessageError, setUserInfo)
                 <TitleDiv>
                     <p>Histórico de pedidos</p>
                 </TitleDiv>
+
+                <CardsDiv>
+                    {pastOrders && pastOrders.length > 0 ? pastOrders: <EmptyMessageDiv><p>Sem </p></EmptyMessageDiv>}
+                </CardsDiv>
+                
             </PastOrdersDiv>
             <NavigationBar sourcePage = 'profile'/>
         </ProfilePageMainDiv>

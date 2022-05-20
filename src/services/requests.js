@@ -145,3 +145,22 @@ export const postRequest = (endpoint, body, setCart, setError, setOpen, navigate
           setOpen(true)
       })
 }
+
+export const getOrdersHistory = async (url, token, setOpen, setMessageError, setOrderHistory) => 
+{
+  try {
+    const response = await axios.get(`${BaseUrl}${url}`, {
+      headers: { 
+          'auth': token
+        }
+      })
+
+  
+      setOrderHistory(response.data.orders)
+
+  }
+  catch(error) {
+    setOpen(true)
+    setMessageError(error.response.data.message)
+  }
+}

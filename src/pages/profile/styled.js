@@ -42,3 +42,12 @@ justify-items: flex-start;
 border-bottom: solid 1px black; 
 font-size: 16px; 
 `
+
+export const EmptyMessageDiv = styled.div`
+
+`
+
+export const CardsDiv = styled.div`
+    width: 100%; 
+    overflow-y: auto; 
+`
