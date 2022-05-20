@@ -40,7 +40,7 @@ let pastOrders = orderHistory && orderHistory.length >0 && orderHistory.map( (or
                 </TitleDiv>
 
                 <CardsDiv>
-                    {pastOrders && pastOrders.length > 0 ? pastOrders: <EmptyMessageDiv><p>Sem </p></EmptyMessageDiv>}
+                    {pastOrders && pastOrders.length > 0 ? pastOrders: <EmptyMessageDiv><p></p></EmptyMessageDiv>}
                 </CardsDiv>
                 
             </PastOrdersDiv>
