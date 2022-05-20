@@ -1,21 +1,24 @@
-import { GlobalContext } from './GlobalContext'
-import React, {useState} from 'react'
+import React, {useContext, useState} from 'react'
 
-export default function GlobalState(props) {
+export const GlobalContext = React.createContext();
+
+export const GlobalStateProvider = (props) => {
 
     //objeto user
-    const [user, setUser] = useState({});
+    const [filter, setFilter] = useState("")
     
 
 
-    let states = {user}; 
-    let setters = {setUser}
+    // let states = {user}; 
+    // let setters = {setUser}
 
     return (
-        <GlobalContext.Provider value = { {states,setters}}>
+        <GlobalContext.Provider value = {{filter, setFilter}}>
             {props.children}
         </GlobalContext.Provider>
     )
 }
+
+export const useFilter = () => useContext(GlobalContext)
 
 
