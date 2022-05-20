@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext} from "react";
 import { MainContainer, SearchContainer, Headers, Icon, Back, Main } from "./styled";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Link } from "react-router-dom";
 import CardImage from "../../components/card/Card"
-import {useFilter} from "../../global/GlobalState"
+import {GlobalContext} from '../../global/GlobalContext'
+
 
 const SearchPage = () => {
-    const {filter, setFilter} = useFilter()
+   const {states, setters} = useContext(GlobalContext); 
+    const {filter} = states; 
+    const {setFilter} = setters; 
+   
     const [inicial, setInicial] = useState(true)
     const [active, setActive] = useState(false)
     const Handler = (e) =>{
