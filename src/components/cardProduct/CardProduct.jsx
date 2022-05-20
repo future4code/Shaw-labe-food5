@@ -30,6 +30,7 @@ const CardProduct = ({product, addButton, setProductId, removeButton}) => {
         cartCopy.splice(index,1)
         window.localStorage.setItem('cart', JSON.stringify(cartCopy))
         setCart(cartCopy)
+        cartCopy.length===0 && window.localStorage.removeItem('resId')
 
         
         // atualiza no array do restaurante

@@ -10,7 +10,7 @@ import { BaseUrl } from '../../constants/api'
 import { goToHome } from '../../routes/cordinator'
 import { useNavigate } from 'react-router-dom'
 
-const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, setReset) => {
+const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, resetLocal, setOrder) => {
   
     const token = window.sessionStorage.getItem('token')
     const headers = {
@@ -21,11 +21,13 @@ const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, setRe
 
     axios.post(BaseUrl + endpoint, body, headers)
         .then((res) => {
-            console.log(res.data)
             setCart([])
             goToHome(navigate)
-            setReset(true)
+            resetLocal()
+            console.log(res.data)
+            setOrder(res.data)
             window.localStorage.removeItem('resId')
+            window.localStorage.removeItem('cart')
         })
         .catch((err) => {
             setError(err.response.data)
@@ -38,10 +40,9 @@ const CartPage = () => {
     const [paymentMethod, setPayment] = useState('');
     const [choosenRestaurant, setChoosenRestaurant] = useState({});
     const [restaurantId, setRestaurantId] = useState({});
-    const [reset, setReset] = useState(null);
     const { states, setters } = useContext(GlobalContext)
     const { cart, user } = states;
-    const { setCart } = setters;
+    const { setCart, setOrder } = setters;
     const [values, setValues] = useState(0)
     const navigate = useNavigate()
     
@@ -93,33 +94,33 @@ const CartPage = () => {
             paymentMethod: paymentMethod
         }
 
-        postRequest(`restaurants/${choosenRestaurant.restaurant.id}/order`, body, setCart, setMessageError, setOpen, navigate, setReset)
+        postRequest(`restaurants/${choosenRestaurant.restaurant.id}/order`, body, setCart, setMessageError, setOpen, navigate, resetLocal, setOrder)
         
         // atualiza no array do restaurante
-        if(reset){
+        // if(reset){
 
-            cart.forEach((productOnCart) => {
-                const restaurant = JSON.parse(window.localStorage.getItem(restaurantId))
-                const restaurantCopy = [...restaurant.restaurant.products]
+        //     cart.forEach((productOnCart) => {
+        //         const restaurant = JSON.parse(window.localStorage.getItem(restaurantId))
+        //         const restaurantCopy = [...restaurant.restaurant.products]
                 
-                const product = restaurantCopy.filter((item) => {
-                    return item.id === productOnCart.id
-                })
+        //         const product = restaurantCopy.filter((item) => {
+        //             return item.id === productOnCart.id
+        //         })
                 
-                const productCopy = { ...product[0], quantity: 0 }
+        //         const productCopy = { ...product[0], quantity: 0 }
                 
-                const indexR = restaurantCopy.findIndex((item) => item.id === productOnCart.id)
+        //         const indexR = restaurantCopy.findIndex((item) => item.id === productOnCart.id)
                 
-                restaurantCopy[indexR] = productCopy
-                window.localStorage.setItem(restaurantId, JSON.stringify({
-                    ...restaurant,
-                    restaurant: {
-                        ...restaurant.restaurant, products: restaurantCopy
-                    }
-                }))
-            })
-            window.localStorage.removeItem('cart')
-        }   
+        //         restaurantCopy[indexR] = productCopy
+        //         window.localStorage.setItem(restaurantId, JSON.stringify({
+        //             ...restaurant,
+        //             restaurant: {
+        //                 ...restaurant.restaurant, products: restaurantCopy
+        //             }
+        //         }))
+        //     })
+            
+        // }   
     }
 
     const resetLocal = () => {
@@ -145,10 +146,6 @@ const CartPage = () => {
         })
         window.localStorage.removeItem('cart')
     }
-
-    useEffect(()=>{
-        reset && resetLocal()
-    }, [reset])
 
     return (
         <CartContainer>
