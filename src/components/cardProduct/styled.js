@@ -15,6 +15,7 @@ export const CardImage = styled.img`
     height: 128.5px;
     margin-top: -0.5px;
     border-radius: 8px 0px 0px 8px;
+    object-fit: cover;
 `
 
 export const CardInfo = styled.div`
