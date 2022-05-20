@@ -5,7 +5,7 @@ export const CartContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  width: 100vw;
+  max-width: 100vw;
 `
 export const Title = styled.p`
     display: flex;
