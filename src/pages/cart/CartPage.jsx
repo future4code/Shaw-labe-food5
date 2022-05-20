@@ -10,7 +10,7 @@ import { BaseUrl } from '../../constants/api'
 import { goToHome } from '../../routes/cordinator'
 import { useNavigate } from 'react-router-dom'
 
-const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, setReset) => {
+const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, setReset, setOrder) => {
   
     const token = window.sessionStorage.getItem('token')
     const headers = {
@@ -21,10 +21,10 @@ const postRequest = (endpoint, body, setCart, setError, setOpen, navigate, setRe
 
     axios.post(BaseUrl + endpoint, body, headers)
         .then((res) => {
-            console.log(res.data)
             setCart([])
             goToHome(navigate)
             setReset(true)
+            setOrder(res.data)
             window.localStorage.removeItem('resId')
         })
         .catch((err) => {
@@ -41,7 +41,7 @@ const CartPage = () => {
     const [reset, setReset] = useState(null);
     const { states, setters } = useContext(GlobalContext)
     const { cart, user } = states;
-    const { setCart } = setters;
+    const { setCart, setOrder } = setters;
     const [values, setValues] = useState(0)
     const navigate = useNavigate()
     

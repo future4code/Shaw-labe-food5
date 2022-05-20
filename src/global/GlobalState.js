@@ -9,15 +9,19 @@ export const GlobalStateProvider = (props) => {
     // produtos no carrinho
     const [cart, setCart] = useState([]);
 
+    // info pedido criado
+
+    const [order, setOrder] = useState({})
+
     useEffect(()=>{
         const cartLocal = window.localStorage.getItem('cart')
         cartLocal && setCart(JSON.parse(cartLocal))
     },[])
     
-    let states = {user, cart}; 
-    let setters = {setUser, setCart}
+    let states = {user, cart, order}; 
+    let setters = {setUser, setCart, setOrder}
     const [filter, setFilter] = useState("")
-
+    console.log(order)
 
     return (
         <GlobalContext.Provider value = {{filter, setFilter, states, setters}}>
