@@ -10,10 +10,9 @@ import { Button, InputAdornment, Alert, Snackbar } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
 import loading from '../../assets/myLoading.svg';
-import axios from "axios"; 
-import { BaseUrl } from '../../constants/api';
 import {GlobalContext} from '../../global/GlobalContext'
 import splash from '../../assets/splash.png'
+import { attemptLogin } from '../../services/requests';
 
 
 const LoginPage = () => {
@@ -22,20 +21,10 @@ const LoginPage = () => {
     const {states, setters} = useContext(GlobalContext); 
     const [showLoadingScreen, setShowLoadingScreen] = useState(true); 
     const {user} = states; 
-    const {setUser} = setters;
-    
-
     const [open, setOpen] = useState(false)
     const [messageError, setMessageError] = useState('')
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
 
-    
-
+    //useEffect inicial
     useEffect( ()=>{
         const token = window.sessionStorage.getItem('token')
         
@@ -47,27 +36,19 @@ const LoginPage = () => {
             setShowLoadingScreen(false);
         }, 2500)
 
-
     },[])
-
-
-
-
-
-    const attemptLogin= async (url, body, setOpen) => {
-        try 
-        {
-            const response = await axios.post(`${BaseUrl}${url}`,body)
-            return response; 
+    
+    
+    //funcao de fechar notificao de requisicao
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
         }
-        catch (error) {
-           
-            setOpen(true)
-            setMessageError(error.response.data.message)
-        }
-    }
-   
+        setOpen(false);
+    };
 
+    
+     //mostrar splash por 2s antes de mostrar formulario de logIn
      return ( showLoadingScreen ? (<LoadingScreenDiv>
         <img alt='loading screen' src={splash} /> 
     </LoadingScreenDiv>) :  
@@ -81,12 +62,10 @@ const LoginPage = () => {
             <LoginPageContentDiv>
                 <h3>Entrar</h3>
 
-
                 <LoginPageFormDiv>
-
+            {/* Formik foi usado para os formularios e Yup para a validacao */}
                 <Formik
                 initialValues={{email: "", password: ""}}
-
                 validationSchema = {Yup.object({
                     email: Yup
                     .string('Insira o seu email')
@@ -105,27 +84,21 @@ const LoginPage = () => {
                         email: values.email, 
                         password: values.password
                     }
-
-                    let answer = attemptLogin("login", body, setOpen); 
+                    let answer = attemptLogin("login", body, setOpen,setMessageError); 
                     answer.then( (response) => {
                             if(response.data.token)
                             {
-                                setUser(response.data.user); 
+                                window.sessionStorage.setItem('user', JSON.stringify(response.data.user))
                                 window.sessionStorage.setItem("token", response.data.token)
                                 navigate('/', {replace: true}); 
                             }
                         actions.setSubmitting(false)
                         actions.resetForm()
-                    }
-
-                    ).catch( (error) => {
+                    }  ).catch( (error) => {
                         actions.setSubmitting(false)
                         actions.resetForm()
-                    })
-
-                   
+                    })    
                 }}
-
                 >
                     { (props) => {
                         return (
@@ -174,12 +147,10 @@ const LoginPage = () => {
                                             <IconButton
                                             aria-label='toggle password visibility'
                                             onClick={()=> setShowPassword(!showPassword)}
-                                            edge = 'end'
-                                            
+                                            edge = 'end'       
                                             >
-                                                {showPassword ? <VisibilityOff color='#000000'/>: <Visibility color='#000000'/>}
+                                                {showPassword ? <VisibilityOff />: <Visibility />}
                                             </IconButton>
-
                                         </InputAdornment>,
                                        }}
                                        />
@@ -202,14 +173,9 @@ const LoginPage = () => {
                                 >Entrar</Button>}
                             </Form>
                         )
-                    }}
-                    
+                    }}     
                 </Formik>
-       
                 </LoginPageFormDiv>
-
-
-            
 
 
             <p id='signUpButton' onClick={()=> goToSignUp(navigate)}>Não possui cadastro? Clique aqui.</p>
@@ -220,8 +186,7 @@ const LoginPage = () => {
                 autoHideDuration={6000}
                 onClose={handleClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                key={'top' + 'center'}
-               
+                key={'top' + 'center'}       
             >
                 <Alert onClose={handleClose} severity="warning" sx={{ width: '100%'}}>
                     {messageError}

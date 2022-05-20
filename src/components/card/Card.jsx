@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useFilter } from "../../global/GlobalState";
 
 const Container = styled.div`
 width: 100vw;
@@ -73,6 +74,7 @@ const Delivery = styled.div`
 const CardImage = () => {
   //useProtectedPage()
   const [rest, setRest] = useState([]);
+  const {filter, setFilter} = useFilter()
 
   const getRest = () => {
     const token =
@@ -97,7 +99,13 @@ const CardImage = () => {
   useEffect(() => {
     getRest();
   }, []);
-  const listRest = rest.map((res) => {
+  console.log(rest)
+  const filteredList = filter ? rest.filter(({
+    name
+  }) => name.toUpperCase().includes(filter.toUpperCase())) : rest;
+  console.log(filteredList)
+
+  const listRest = filteredList.map((res) => {
     return (
       <>
         <Container>
