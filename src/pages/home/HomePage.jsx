@@ -4,6 +4,7 @@ import { CardImageH } from "../../components/card/Card";
 import SearchAppBar from "../../components/SearchBar/SearchBar";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
 import { Future, Section } from "./styled";
+import { PopUp } from "../../components/popUp/PopUp";
 
 const HomePage = () => {
   return (
@@ -15,6 +16,7 @@ const HomePage = () => {
       <Section>
         <CardImageH />
       </Section>
+      <PopUp/>
       <NavigationBar />
     </>
   );
