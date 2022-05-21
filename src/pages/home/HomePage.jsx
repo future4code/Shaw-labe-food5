@@ -7,6 +7,7 @@ import { Future, Section } from "./styled";
 import { PopUp } from "../../components/popUp/PopUp";
 
 const HomePage = () => {
+ 
   return (
     <>
       <Future>

@@ -9,38 +9,23 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { Button, InputAdornment, Alert, Snackbar  } from '@mui/material';
 import { Field, Form, Formik } from 'formik';
 import IconButton from '@mui/material/IconButton';
-import axios from "axios"; 
-import { BaseUrl } from '../../constants/api';
 import loading from '../../assets/myLoading.svg';
 import {GlobalContext} from '../../global/GlobalContext'
 import { LoadingDiv } from '../CreateAddress/styled';
-
-
-
-
-//token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InFaZWJJS21NR3Z3VDROT1NIcWVmIiwibmFtZSI6InRlc3RlIHRlc3RlIiwiZW1haWwiOiJ0ZXN0ZUB0ZXN0YW5kby5jb20iLCJjcGYiOiI1NTUuNTU1LjU1NS0wMCIsImhhc0FkZHJlc3MiOmZhbHNlLCJpYXQiOjE2NTI4MTQ0Nzl9.94KvZFamtttWtfFVe8S4wW23jX5l0VYy-nqR2jGSmpQ
-
-//martin token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InIxNUVVT3JjWFk2dTZiM0M0UDRQIiwibmFtZSI6Ik1hcnRpbiBTZWphcyIsImVtYWlsIjoibWFydGluQGxhYmVudS5jb20iLCJjcGYiOiIxNzMuMDAwLjAwMC0wMCIsImhhc0FkZHJlc3MiOmZhbHNlLCJpYXQiOjE2NTI4MzkwMzN9.tcyebwQVcsIrgQs0J55eMmKZ2muotWbuPyTeBX5arxI"
+import { attemptSignUp } from '../../services/requests';
 
 
 const SignUpPage = () => {
+    
     const navigate = useNavigate(); 
     const [showPassword, setShowPassword] = useState(false); 
     const [showCheckPassword, setShowCheckPassword] = useState(false); 
     const {states, setters} = useContext(GlobalContext); 
     const {setUser} = setters; 
-
-    //alert
     const [open, setOpen] = useState(false)
     const [messageError, setMessageError] = useState('')
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
-    //-------------------------------------------------------
 
+    //useEffect inicial
     useEffect( ()=>{
         const token = window.sessionStorage.getItem('token')
         
@@ -48,21 +33,17 @@ const SignUpPage = () => {
             navigate('/', {replace: true})
         }
 
-
     },[])
 
-    const attemptSignUp = async (url, body, setOpen) => {
-        try 
-        {
-            const response = await axios.post(`${BaseUrl}${url}`,body)
-            return response; 
+    //funcao de fechar notificacao de requisicao
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
         }
-        catch (error) {
-            setOpen(true)
-            setMessageError(error.response.data.message)
-        }
-    }
+        setOpen(false);
+    };
 
+    
     return (
         <SignUpPageMainDiv>
             <Header/>
@@ -113,7 +94,7 @@ const SignUpPage = () => {
                         password: values.password
                     }
 
-                    let answer = attemptSignUp("signup",body, setOpen); 
+                    let answer = attemptSignUp("signup",body, setOpen, setMessageError); 
                     answer.then( (response) => {
                        if(response.data.token) 
                        { 
@@ -121,21 +102,12 @@ const SignUpPage = () => {
                         navigate('./address', {replace: true}); 
                        }
 
-                       else {
-
-                       }
                         actions.setSubmitting(false)
                         actions.resetForm()
-                    }
-
-                    ).catch( (error) => {
-                        console.log("erro dentro do signup form", error);
+                    }).catch( (error) => {
                         actions.setSubmitting(false)
                         actions.resetForm()
-                    })
-                    
-
-                    
+                    })  
                 }}
                 >
                     { (props) => {
@@ -206,7 +178,6 @@ const SignUpPage = () => {
                                        <GreyBorderTextField
                                        {...field}
                                        fullWidth
-                                     
                                        sx={{
                                            marginTop: '16px',
                                        }}
@@ -225,11 +196,9 @@ const SignUpPage = () => {
                                             aria-label='toggle password visibility'
                                             onClick={()=> setShowPassword(!showPassword)}
                                             edge = 'end'
-                                            
                                             >
                                                 {showPassword ? <VisibilityOff/>: <Visibility />}
                                             </IconButton>
-
                                         </InputAdornment>,
                                        }}
                                        />
@@ -241,7 +210,6 @@ const SignUpPage = () => {
                                        <GreyBorderTextField
                                        {...field}
                                        fullWidth
-                                     
                                        sx={{
                                            marginTop: '16px',
                                        }}
@@ -260,11 +228,9 @@ const SignUpPage = () => {
                                             aria-label='toggle password visibility'
                                             onClick={()=> setShowCheckPassword(!showCheckPassword)}
                                             edge = 'end'
-                                            
                                             >
                                                 {showCheckPassword ? <VisibilityOff/>: <Visibility />}
                                             </IconButton>
-
                                         </InputAdornment>,
                                        }}
                                        />
@@ -286,16 +252,10 @@ const SignUpPage = () => {
                                    
                                 }}
                                 >Criar</Button>}
-                             
                             </Form>
-                        )
-                    }}
-
+                             )}}
                 </Formik>
-
-
             </SignUpPageFormDiv>
-
             </SignUpPageContentDiv>
 
             <Snackbar

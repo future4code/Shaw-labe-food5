@@ -2,8 +2,8 @@ import * as React from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { useState } from "react";
-import { useEffect } from "react";
-import { useFilter } from "../../global/GlobalState";
+import { useEffect, useContext } from "react";
+import {GlobalContext} from '../../global/GlobalContext'
 
 const Container = styled.div`
 width: 100vw;
@@ -71,7 +71,9 @@ const Delivery = styled.div`
 export const CardImageF = () => {
   //useProtectedPage()
   const [rest, setRest] = useState([]);
-  const {filter, setFilter} = useFilter()
+  const {states, setters} = useContext(GlobalContext); 
+  const {filter} = states; 
+  const {setFilter} = setters; 
 
   const getRest = () => {
     const token =
@@ -89,18 +91,18 @@ export const CardImageF = () => {
         setRest(res.data.restaurants);
       })
       .catch((err) => {
-        console.log(err.response);
+       
       });
   };
 
   useEffect(() => {
     getRest();
   }, []);
-  console.log(rest)
+  
   const filteredList = filter ? rest.filter(({
     name
   }) => name.toUpperCase().includes(filter.toUpperCase())) : rest;
-  console.log(filteredList)
+  
 
   const listRest = filteredList.map((res) => {
     return (
