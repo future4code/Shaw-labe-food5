@@ -2,9 +2,8 @@ import styled from "styled-components";
 
 export const HeaderMainDiv = styled.div`
 display: flex; 
-align-items: flex-start; 
+align-items: center; 
 justify-content: space-between; 
-margin-top: 20px; 
 max-width: 100vw; 
 height: 44px; 
 border-bottom: 1px rgb(0, 0, 0, 0.25) solid; 

@@ -30,6 +30,9 @@ margin: 0 auto;
 display: flex; 
 flex-direction: column; 
 margin-top: 16px; 
+padding-bottom: 10vh; 
+overflow: hidden;
+overflow-y: scroll;
 
 `
 
@@ -49,5 +52,6 @@ export const EmptyMessageDiv = styled.div`
 
 export const CardsDiv = styled.div`
     width: 100%; 
-    overflow-y: auto; 
+  
+    
 `

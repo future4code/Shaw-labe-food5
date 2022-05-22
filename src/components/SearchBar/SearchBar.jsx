@@ -1,4 +1,4 @@
-import * as React from "react";
+import  React, {useContext} from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
@@ -7,7 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import ScroolableTabs from "../ScrollableTabs/ScrollableTabs";
 import { SearchContainer, Icon } from "./styled";
 import { Link } from "react-router-dom";
-import { useFilter } from "../../global/GlobalState";
+import { GlobalContext } from '../../global/GlobalContext'
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -38,7 +38,9 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
 const StyledInputBase = styled(InputBase)(({ theme }) => ({}));
 
 const SearchAppBar = () => {
-  const {filter, setFilter} = useFilter()
+  const {states, setters} = useContext(GlobalContext); 
+  const {filter} = states; 
+  const {setFilter} = setters; 
   const onClcik = () =>{
     setFilter("")
   }

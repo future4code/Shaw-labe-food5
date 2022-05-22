@@ -1,25 +1,32 @@
-import * as React from "react";
+import  React from "react";
 // import AppBar from "@mui/material/AppBar";
 import { CardImageH } from "../../components/card/Card";
 import SearchAppBar from "../../components/SearchBar/SearchBar";
 import NavigationBar from "../../components/NavigationBar/NavigationBar";
-import { Future, Section } from "./styled";
+import { Future, HomePageMainContainer, Section } from "./styled";
 import { PopUp } from "../../components/popUp/PopUp";
+import { useProtectedPage } from "../../hooks/useProtectedPage";
+import Header from '../../components/Header/Header';
 
 const HomePage = () => {
+
+
+  useProtectedPage(); 
  
   return (
-    <>
-      <Future>
+    <HomePageMainContainer>
+      {/* <Future>
         <p>FutureEats</p>
-      </Future>
+      </Future> */}
+      <Header title="FutureEats" hideBackButton={true}/>
+
       <SearchAppBar />
       <Section>
         <CardImageH />
       </Section>
       <PopUp/>
       <NavigationBar />
-    </>
+    </HomePageMainContainer>
   );
 };
 

@@ -1,17 +1,19 @@
-import  React,{useState,useEffect} from "react";
+import  React,{useState,useEffect, useContext} from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import axios from "axios";
-import { useFilter } from "../../global/GlobalState";
+import { GlobalContext } from '../../global/GlobalContext'
 
 const ScroolableTabs = () => {
   const [value, setValue] = useState(0);
   const [rest, setRest] = useState([]);
-  const {filter, setFilter} = useFilter()
+  const {states, setters} = useContext(GlobalContext); 
+  const {filter} = states; 
+  const {setFilter} = setters; 
 
   const getRest = () => {
     const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5xaGJpbWR4NGZmQ3BTaElJWElKIiwibmFtZSI6IkFzdHJvZGV2IiwiZW1haWwiOiJhc3Ryb2RldkBmdXR1cmU0LmNvbSIsImNwZiI6IjExMS4xMTEuMTExLTc4IiwiaGFzQWRkcmVzcyI6dHJ1ZSwiYWRkcmVzcyI6InJ1YSBhc3Ryb2RldiwgMTAsIDEgLSBMdWx1IiwiaWF0IjoxNjUyNzk4MTI4fQ.hScs9KQ_9H-rGqYCJEGFGnScdIZoEMp0UxwD4oAy6WY";
+      window.sessionStorage.getItem('token'); 
     axios
       .get(
         "https://us-central1-missao-newton.cloudfunctions.net/futureEatsB/restaurants",

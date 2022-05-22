@@ -164,3 +164,19 @@ export const getOrdersHistory = async (url, token, setOpen, setMessageError, set
     setMessageError(error.response.data.message)
   }
 }
+
+export const getActiveOrder= async (url, token, setActiveOrder) => {
+  try {
+    const response = await axios.get(`${BaseUrl}${url}`, {
+      headers: { 
+          'auth': token
+        }
+      })
+      setActiveOrder(response.data.order)
+
+  }
+  catch(error) {
+   
+    console.log(error.response.data.message)
+  }
+}

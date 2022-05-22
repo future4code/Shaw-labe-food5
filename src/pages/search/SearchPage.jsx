@@ -3,7 +3,7 @@ import { MainContainer, SearchContainer, Headers, Icon, Back, Main } from "./sty
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Link } from "react-router-dom";
 import {CardImageF} from "../../components/card/Card"
-import {useFilter} from "../../global/GlobalState"
+import { GlobalContext } from '../../global/GlobalContext'
 
 const SearchPage = () => {
    const {states, setters} = useContext(GlobalContext); 
@@ -15,7 +15,7 @@ const SearchPage = () => {
     const Handler = (e) =>{
         setFilter(e.target.value)
     }
-    console.log(filter)
+  
     useEffect(()=>{
         if(filter.length > 0){
             setInicial(false)

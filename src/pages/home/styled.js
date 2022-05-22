@@ -1,6 +1,11 @@
 import styled from "styled-components"
 import AppBar from "@mui/material/AppBar";
 
+export const HomePageMainContainer = styled.div` 
+height: auto; 
+
+`
+
 export const Section = styled.div`
   margin-top: 2%;
   height: 80vh;

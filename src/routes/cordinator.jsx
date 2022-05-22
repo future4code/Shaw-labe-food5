@@ -16,7 +16,7 @@ export const goToProfile = (navigate) => {
 }
 
 export const goToRestaurant = (navigate, id) => {
-    navigate('/restaurant/:id')
+    navigate(`/restaurant/${id}`)
 }
 
 export const goToSearch = (navigate) => {
