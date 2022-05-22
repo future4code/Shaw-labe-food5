@@ -1,12 +1,33 @@
-import React from 'react'
+import  React from "react";
+// import AppBar from "@mui/material/AppBar";
+import { CardImageH } from "../../components/card/Card";
+import SearchAppBar from "../../components/SearchBar/SearchBar";
+import NavigationBar from "../../components/NavigationBar/NavigationBar";
+import { HomePageMainContainer, Section } from "./styled";
+import { PopUp } from "../../components/popUp/PopUp";
+import { useProtectedPage } from "../../hooks/useProtectedPage";
+import Header from '../../components/Header/Header';
 
 const HomePage = () => {
 
-    return (
-        <>
-            HomePage
-        </>
-    )
-}
 
-export default HomePage
+  useProtectedPage(); 
+ 
+  return (
+    <HomePageMainContainer>
+      <Header title="FutureEats" hideBackButton={true}/>
+
+      <SearchAppBar />
+
+      <Section>
+        <CardImageH />
+      </Section>
+
+      <PopUp/>
+      
+      <NavigationBar />
+    </HomePageMainContainer>
+  );
+};
+
+export default HomePage;
