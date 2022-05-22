@@ -5,6 +5,7 @@ import { getActiveOrder } from "../../services/requests";
 
 export const PopUp = () => {
 
+
   let [activeOrder, setActiveOrder] = useState({}); 
 
   useEffect(()=>{
@@ -26,7 +27,7 @@ export const PopUp = () => {
   
   }
   return (
-   activeOrder && activeOrder !== null? ( <MainContainer>
+   activeOrder && activeOrder !== null && ( <MainContainer>
       <div className="content">
         <div className="first">
           <AccessTimeIcon />
@@ -38,6 +39,6 @@ export const PopUp = () => {
         </div>
       </div>
       
-    </MainContainer>): (<></>)
+    </MainContainer>)
   );
 };
