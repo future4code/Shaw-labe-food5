@@ -19,6 +19,7 @@ background-color: #5cb646;
 }
 .content{
     display: flex;
+    background-color: #5cb646;
 }
 .first{
     display: flex;
@@ -29,11 +30,10 @@ background-color: #5cb646;
 .second{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     gap: 5px;
     width: 45%;
     height: 100%;
-    padding: 5.8vw 0;
 }
 .line1{
     color: #fff;
