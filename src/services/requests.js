@@ -94,6 +94,22 @@ export const attemptCreateAddress = async (url, body,token, setOpen, setMessageE
     }
   }
 
+  export const getUserInfoStart= async (url, token, setUserInfo) => {
+    try {
+      const response = await axios.get(`${BaseUrl}${url}`, {
+        headers: { 
+            'auth': token
+          }
+        })
+        setUserInfo(response.data.user)
+  
+    }
+    catch(error) {
+     
+      console.log(error.response.data.message)
+    }
+  }
+
   export const attemptEditUserInfo = async (url, body, token, setOpen, setMessageError) => {
     try 
     {
