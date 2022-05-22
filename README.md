@@ -34,6 +34,19 @@ O layout foi desenvolvido pela designer Camila Mizutani e pode ser acessado [cli
 ## 🔗 Link Surge: 
 Acesse nosso site [clicando aqui!](http://labefood-grupo5-shaw.surge.sh/)
 ## 📸 Imagens:
+   
+#### MOBILE
+![image](https://user-images.githubusercontent.com/50851374/169713253-3ccf3653-aa5a-4f04-aff9-9f0745f63652.png)
+![image](https://user-images.githubusercontent.com/50851374/169713271-d8ad0172-cbc4-4491-bcab-74b8fe97aae4.png)
+![image](https://user-images.githubusercontent.com/50851374/169713298-33e57be2-813a-4866-87f4-ff4317075a15.png)
+![image](https://user-images.githubusercontent.com/50851374/169713345-d8263352-7eb7-4e1e-b597-a5bcee202f4b.png)
+![image](https://user-images.githubusercontent.com/50851374/169713437-a7de446f-3880-4afc-bc22-cbb336e8b40d.png)
+![image](https://user-images.githubusercontent.com/50851374/169713569-f3899c7d-393a-429e-9fb7-164ee8245a6e.png)
+![image](https://user-images.githubusercontent.com/50851374/169713629-712d4e10-4bf7-42ef-8c14-21fa1ee16391.png)
+![image](https://user-images.githubusercontent.com/50851374/169714056-f3102254-d6fb-4241-afec-b8ee3ce66b74.png)
+![image](https://user-images.githubusercontent.com/50851374/169715320-9afab5bc-d4cf-43c3-ac73-6e5dc63d5d7a.png)
+![image](https://user-images.githubusercontent.com/50851374/169715353-f3e85ef0-2d55-4553-a2e9-3c1e8be4e4ec.png)
+![image](https://user-images.githubusercontent.com/50851374/169715385-5291aa21-60a6-4b7d-801f-2607384f210b.png)
 
    
 ## 👨‍💻 Desenvolvedores:
