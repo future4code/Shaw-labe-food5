@@ -74,7 +74,7 @@ export const CardImageF = () => {
   const [rest, setRest] = useState([]);
   const {states} = useContext(GlobalContext); 
   const {filter} = states; 
-
+  const navigate = useNavigate(); 
   const getRest = () => {
     const token =
      window.sessionStorage.getItem('token'); 
@@ -106,7 +106,7 @@ export const CardImageF = () => {
 
   const listRest = filteredList.map((res) => {
     return (
-      <>
+      <div key={res.id} onClick={() => goToRestaurant(navigate, res.id)}>
         <Container>
         <CardMeal>
           <div>
@@ -121,7 +121,7 @@ export const CardImageF = () => {
           </Delivery>
         </CardMeal>
       </Container>
-      </>
+      </div>
     );
   });
 
