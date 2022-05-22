@@ -32,8 +32,7 @@ O layout foi desenvolvido pela designer Camila Mizutani e pode ser acessado [cli
 - [formik](https://formik.org/)
 
 ## 🔗 Link Surge: 
-Acesse nosso site [clicando aqui!](http://pendente/)
-
+Acesse nosso site [clicando aqui!](http://labefood-grupo5-shaw.surge.sh/)
 ## 📸 Imagens:
 
    
