@@ -71,11 +71,9 @@ const Delivery = styled.div`
   display: flex;
 `
 export const CardImageF = () => {
-  //useProtectedPage()
   const [rest, setRest] = useState([]);
-  const {states, setters} = useContext(GlobalContext); 
+  const {states} = useContext(GlobalContext); 
   const {filter} = states; 
-  const {setFilter} = setters; 
 
   const getRest = () => {
     const token =
@@ -131,16 +129,13 @@ export const CardImageF = () => {
 };
 
 export const CardImageH = () => {
-  //useProtectedPage()
   const [rest, setRest] = useState([]);
-  const {states, setters} = useContext(GlobalContext); 
+  const {states} = useContext(GlobalContext); 
   const {filter} = states; 
-  const {setFilter} = setters; 
   const navigate = useNavigate(); 
 
   const getRest = () => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5xaGJpbWR4NGZmQ3BTaElJWElKIiwibmFtZSI6IkFzdHJvZGV2IiwiZW1haWwiOiJhc3Ryb2RldkBmdXR1cmU0LmNvbSIsImNwZiI6IjExMS4xMTEuMTExLTc4IiwiaGFzQWRkcmVzcyI6dHJ1ZSwiYWRkcmVzcyI6InJ1YSBhc3Ryb2RldiwgMTAsIDEgLSBMdWx1IiwiaWF0IjoxNjUyNzk4MTI4fQ.hScs9KQ_9H-rGqYCJEGFGnScdIZoEMp0UxwD4oAy6WY";
+    const token = window.sessionStorage.getItem('token')
     axios
       .get(
         "https://us-central1-missao-newton.cloudfunctions.net/futureEatsB/restaurants",
