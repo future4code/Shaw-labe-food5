@@ -4,6 +4,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect, useContext } from "react";
 import {GlobalContext} from '../../global/GlobalContext'
+import { useNavigate } from "react-router-dom";
+import { goToRestaurant } from "../../routes/cordinator";
 
 const Container = styled.div`
 width: 100vw;
@@ -77,7 +79,7 @@ export const CardImageF = () => {
 
   const getRest = () => {
     const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ik5xaGJpbWR4NGZmQ3BTaElJWElKIiwibmFtZSI6IkFzdHJvZGV2IiwiZW1haWwiOiJhc3Ryb2RldkBmdXR1cmU0LmNvbSIsImNwZiI6IjExMS4xMTEuMTExLTc4IiwiaGFzQWRkcmVzcyI6dHJ1ZSwiYWRkcmVzcyI6InJ1YSBhc3Ryb2RldiwgMTAsIDEgLSBMdWx1IiwiaWF0IjoxNjUyNzk4MTI4fQ.hScs9KQ_9H-rGqYCJEGFGnScdIZoEMp0UxwD4oAy6WY";
+     window.sessionStorage.getItem('token'); 
     axios
       .get(
         "https://us-central1-missao-newton.cloudfunctions.net/futureEatsB/restaurants",
@@ -131,7 +133,10 @@ export const CardImageF = () => {
 export const CardImageH = () => {
   //useProtectedPage()
   const [rest, setRest] = useState([]);
-  const {filter, setFilter} = useFilter()
+  const {states, setters} = useContext(GlobalContext); 
+  const {filter} = states; 
+  const {setFilter} = setters; 
+  const navigate = useNavigate(); 
 
   const getRest = () => {
     const token =
@@ -156,16 +161,15 @@ export const CardImageH = () => {
   useEffect(() => {
     getRest();
   }, []);
-  console.log(rest)
   const filteredList = filter ? rest.filter(({
     category
   }) => category.toUpperCase().includes(filter.toUpperCase())) : rest;
-  console.log(filteredList)
 
   const listRest = filteredList.map((res) => {
+    
     return (
-      <>
-        <Container>
+      <div key={res.id} onClick={() => goToRestaurant(navigate, res.id)}>
+        <Container >
         <CardMeal>
           <div>
             <img src={res.logoUrl} alt="food" />
@@ -179,7 +183,7 @@ export const CardImageH = () => {
           </Delivery>
         </CardMeal>
       </Container>
-      </>
+      </div>
     );
   });
 
