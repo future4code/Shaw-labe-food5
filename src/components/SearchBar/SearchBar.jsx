@@ -1,45 +1,19 @@
 import  React, {useContext} from "react";
 import { styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
 import ScroolableTabs from "../ScrollableTabs/ScrollableTabs";
 import { SearchContainer, Icon } from "./styled";
 import { Link } from "react-router-dom";
 import { GlobalContext } from '../../global/GlobalContext'
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  width: "95vw",
-  margin: "2vw",
-  height: "56px",
-  alignItems: "center",
-  border: "1px solid  #b8b8b8",
-  marginTop: "-9px",
-}));
 const AppBarr = styled(AppBar)`
   background-color: #ffffff;
   border-top: 1px solid #b8b8b8;
   box-shadow: none;
 `;
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  color: "GrayText",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({}));
-
 const SearchAppBar = () => {
-  const {states, setters} = useContext(GlobalContext); 
-  const {filter} = states; 
+  const {setters} = useContext(GlobalContext); 
   const {setFilter} = setters; 
   const onClcik = () =>{
     setFilter("")

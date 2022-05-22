@@ -5,7 +5,8 @@ import { getActiveOrder } from "../../services/requests";
 
 export const PopUp = () => {
 
-  let [activeOrder, setActiveOrder] = useState({}); 
+
+  let [activeOrder, setActiveOrder] = useState(null); 
 
   useEffect(()=>{
     let token = window.sessionStorage.getItem('token'); 
@@ -22,11 +23,10 @@ export const PopUp = () => {
     {
       setActiveOrder(null); 
     }
-
-  
   }
+  
   return (
-   activeOrder && activeOrder !== null? ( <MainContainer>
+   activeOrder &&  <MainContainer>
       <div className="content">
         <div className="first">
           <AccessTimeIcon />
@@ -38,6 +38,6 @@ export const PopUp = () => {
         </div>
       </div>
       
-    </MainContainer>): (<></>)
+    </MainContainer>
   );
 };

@@ -7,6 +7,7 @@ import EditUserCard from '../../components/EditUserCard/EditUserCard';
 import loading from '../../assets/myLoading.svg';
 import EditAddressCard from '../../components/EditAddressCard/EditAddressCard';
 import OrderHistoryCard from '../../components/OrderHistoryCard/OrderHistoryCard';
+import { useProtectedPage } from '../../hooks/useProtectedPage';
 
 const ProfilePage = () => {
 
@@ -15,7 +16,7 @@ const ProfilePage = () => {
     const [userInfo, setUserInfo] = useState({}); 
     const [orderHistory, setOrderHistory] = useState({})
     
-
+useProtectedPage()
 
 useEffect(()=>{
 let token = window.sessionStorage.getItem('token'); 
