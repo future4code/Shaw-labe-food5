@@ -75,6 +75,7 @@ export const CardImageF = () => {
   const {states} = useContext(GlobalContext); 
   const {filter} = states; 
   const navigate = useNavigate(); 
+
   const getRest = () => {
     const token =
      window.sessionStorage.getItem('token'); 
